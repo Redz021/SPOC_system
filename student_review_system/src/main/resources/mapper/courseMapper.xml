@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.model.mapper.courseMapper">
+
+    <resultMap id="studentCourse" type="com.example.demo.model.ValueObject.Course">
+
+        <result column="Cno" jdbcType="VARCHAR" property="Cno" />
+        <result column="year_admission" jdbcType="VARCHAR" property="year_admission" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="profession" jdbcType="VARCHAR" property="profession" />
+        <result column="ifopen" jdbcType="VARCHAR" property="ifopen" />
+    </resultMap>
+
+    <select id="StudentCourse" parameterType="String" resultType="com.example.demo.model.ValueObject.Course">
+        select * from course where year_admission = #{year_admission}  and profession= #{profession}
+    </select>
+
+    <resultMap id="teacherCourse" type="com.example.demo.model.ValueObject.Course">
+
+        <result column="Cno" jdbcType="VARCHAR" property="Cno" />
+        <result column="year_admission" jdbcType="VARCHAR" property="year_admission" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="profession" jdbcType="VARCHAR" property="profession" />
+        <result column="ifopen" jdbcType="VARCHAR" property="ifopen" />
+    </resultMap>
+
+    <select id="TeacherCourse" parameterType="String" resultType="com.example.demo.model.ValueObject.Course">
+        select * from course ,course_teacher where course.Cno = course_teacher.Cno and TID = #{TID}
+    </select>
+
+    <resultMap id="CourseAllTestPaper" type="com.example.demo.model.ValueObject.testPaper">
+
+        <result column="TpNo" jdbcType="VARCHAR" property="TpNo" />
+        <result column="paperName" jdbcType="VARCHAR" property="paperName" />
+        <result column="TqNo" jdbcType="VARCHAR" property="TqNo"></result>
+    </resultMap>
+
+    <select id="CourseAllTestPapers" parameterType="String" resultType="com.example.demo.model.ValueObject.testPaper">
+        select * from test_paper where Cno = #{Cno}
+    </select>
+
+    <resultMap id="CourseAllTestQuestions" type="com.example.demo.model.ValueObject.testQuestion">
+
+        <result column="TqNo" jdbcType="VARCHAR" property="TqNo" />
+        <result column="type" jdbcType="VARCHAR" property="type" />
+        <result column="describe" jdbcType="VARCHAR" property="describe" />
+        <result column="submission_time" jdbcType="VARCHAR" property="submission_time" />
+    </resultMap>
+
+    <select id="CourseAllTestQuestions" parameterType="String" resultType="com.example.demo.model.ValueObject.testQuestion">
+        select * from test_question where Cno = #{Cno}
+    </select>
+<!--获取一道题（不包含选项）-->
+    <resultMap id="questionDetail" type="com.example.demo.model.ValueObject.testQuestion">
+
+        <result column="TqNo" jdbcType="VARCHAR" property="TqNo" />
+        <result column="type" jdbcType="VARCHAR" property="type" />
+        <result column="describe" jdbcType="VARCHAR" property="describe" />
+        <result column="describe_pic" jdbcType="VARCHAR" property="describe_pic" />
+        <result column="parsing" jdbcType="VARCHAR" property="parsing" />
+        <result column="parsing_pic" jdbcType="VARCHAR" property="parsing_pic" />
+        <result column="answer" jdbcType="VARCHAR" property="answer" />
+        <result column="answer_pic" jdbcType="VARCHAR" property="answer_pic" />
+        <result column="submission_time" jdbcType="VARCHAR" property="submission_time" />
+    </resultMap>
+
+    <select id="questionDetail" resultType="com.example.demo.model.ValueObject.testQuestion">
+        select * from test_question where TqNo = #{TqNo}
+    </select>
+
+
+<!--获取一道题的所有选项信息-->
+    <resultMap id="OptionsDetail" type="com.example.demo.model.ValueObject.testQuestionOptions">
+
+        <result column="TqNo" jdbcType="VARCHAR" property="TqNo" />
+        <result column="optionDescription" jdbcType="VARCHAR" property="optionDescription" />
+        <result column="option" jdbcType="VARCHAR" property="option" />
+    </resultMap>
+
+    <select id="OptionsDetail" parameterType="String" resultType="com.example.demo.model.ValueObject.testQuestionOptions">
+        select * from test_question_options where TqNo = #{TqNo}
+    </select>
+
+    <!--获取一张试卷的所有试题号-->
+    <resultMap id="paperAllTqNo" type="String">
+
+        <result column="TqNo" jdbcType="VARCHAR" />
+
+    </resultMap>
+
+    <select id="paperAllTqNo" resultType="String">
+        select TqNo from test_paper where TpNo = #{TpNo}
+    </select>
+
+    <!--获取多个题的信息-->
+    <resultMap id="questionDetails" type="com.example.demo.model.ValueObject.testQuestion" >
+
+        <result column="TqNo" jdbcType="VARCHAR" property="TqNo" />
+        <result column="type" jdbcType="VARCHAR" property="type" />
+        <result column="describe" jdbcType="VARCHAR" property="describe" />
+        <result column="describe_pic" jdbcType="VARCHAR" property="describe_pic" />
+        <result column="parsing" jdbcType="VARCHAR" property="parsing" />
+        <result column="parsing_pic" jdbcType="VARCHAR" property="parsing_pic" />
+        <result column="answer" jdbcType="VARCHAR" property="answer" />
+        <result column="answer_pic" jdbcType="VARCHAR" property="answer_pic" />
+        <result column="submission_time" jdbcType="VARCHAR" property="submission_time" />
+    </resultMap>
+
+    <select id="questionDetails" parameterType="String" resultType="com.example.demo.model.ValueObject.testQuestion">
+        select * from test_question where TqNo in
+        <foreach item="item" collection="list" separator="," open="(" close=")" index="">
+        #{item}
+    </foreach>
+    </select>
+    <!--获取多道题的选项信息-->
+    <resultMap id="OptionsDetails" type="com.example.demo.model.ValueObject.testQuestionOptions">
+
+        <result column="TqNo" jdbcType="VARCHAR" property="TqNo" />
+        <result column="optionDescription" jdbcType="VARCHAR" property="optionDescription" />
+        <result column="option" jdbcType="VARCHAR" property="option" />
+    </resultMap>
+
+    <select id="OptionsDetails" parameterType="String" resultType="com.example.demo.model.ValueObject.testQuestionOptions">
+        select * from test_question_options where TqNo in
+        <foreach item="item" collection="list" separator="," open="(" close=")" index="">
+            #{item}
+        </foreach>
+    </select>
+
+</mapper>

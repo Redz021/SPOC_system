@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.model.mapper.TeacherMapper">
+    <!--查询所有老师-->
+    <resultMap id="SelTeachers" type="com.example.demo.model.ValueObject.Teacher">
+        <result column="TID" jdbcType="VARCHAR" property="TID"/>
+        <result column="teacherName" jdbcType="VARCHAR" property="teacherName"/>
+        <result column="department" jdbcType="VARCHAR" property="department"/>
+    </resultMap>
+    <select id="SelTeachers" parameterType="String" resultType="com.example.demo.model.ValueObject.Teacher">
+        select * from `teacher`
+    </select>
+
+    <!--增加一个教师-->
+    <insert id="addTeacher" parameterType="com.example.demo.model.ValueObject.Teacher">
+        insert into `teacher`(`TID`,`teacherName`,`department`)
+        values
+        (#{TID},#{teacherName},#{department})
+    </insert>
+    <!--更新一个教师-->
+    <update id="updateTeacher">
+        update `teacher`
+        <set>
+            TID=#{teacher.TID},
+            teacherName=#{teacher.teacherName},
+            department=#{teacher.department}
+        </set>
+        where TID=#{oldTID}
+    </update>
+    <!--删除一个教师-->
+    <delete id="delTeacher">
+        delete from `teacher` where TID=#{TID}
+    </delete>
+</mapper>

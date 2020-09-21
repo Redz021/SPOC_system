@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.model.mapper.testUpdateMapper">
+    <!--更新题目-->
+    <update id="updateQuestion" useGeneratedKeys="true" keyProperty="TqNo"  parameterType="com.example.demo.model.ValueObject.testQuestion">
+        update test_question
+        <set>
+            <if test="type!=null">`type` = #{type},</if>
+            <if test="describe!=null">`describe`=#{describe},</if>
+            <if test="parsing!=null">`parsing`=#{parsing},</if>
+            <if test="answer!=null">`answer`=#{answer},</if>
+            <if test="describe_pic!=null">`describe_pic`=#{describe_pic},</if>
+            <if test="parsing_pic!=null">`parsing_pic`=#{parsing_pic},</if>
+            <if test="answer_pic!=null">`answer_pic`=#{answer_pic},</if>
+            submission_time = #{submission_time}
+        </set>
+        where TqNo = #{TqNo}
+    </update>
+
+    <!--更新试卷-->
+    <update id="updateTestPaper"  parameterType="com.example.demo.model.ValueObject.testPaper">
+        update test_paper
+        <set>
+            `paperName`=#{paperName},`TqNo`=#{TqNo}
+        </set>
+        where TpNo=#{TpNo}
+    </update>
+</mapper>

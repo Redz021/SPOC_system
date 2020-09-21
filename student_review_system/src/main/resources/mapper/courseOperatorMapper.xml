@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.model.mapper.courseOperatorMapper">
+    <!--查询所有课程-->
+    <resultMap id="getCourses" type="com.example.demo.model.ValueObject.Course">
+        <result column="Cno" jdbcType="VARCHAR" property="Cno" />
+        <result column="year_admission" jdbcType="VARCHAR" property="year_admission" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="profession" jdbcType="VARCHAR" property="profession" />
+        <result column="ifopen" jdbcType="VARCHAR" property="ifopen" />
+        <result column="TID" jdbcType="VARCHAR" property="TID" />
+    </resultMap>
+    <select id="getCourses" parameterType="String" resultType="com.example.demo.model.ValueObject.Course">
+        select * from course ,course_teacher where course.Cno = course_teacher.Cno
+    </select>
+    <!--增加课程-->
+    <insert id="addCourse" useGeneratedKeys="true" keyProperty="Cno" parameterType="com.example.demo.model.ValueObject.Course">
+        insert into `course`(`name`,`year_admission`,`profession`,`ifopen`)
+        values
+        (
+        #{name},#{year_admission},#{profession},#{ifopen}
+        )
+    </insert>
+    <!--增加教师与课程的关系-->
+    <insert id="addCourseTeacher" parameterType="com.example.demo.model.ValueObject.Course">
+        insert into `course_teacher`(`Cno`,`TID`)
+        values (#{Cno},#{TID})
+    </insert>
+    <!--更新课程-->
+    <update id="updateCourse" parameterType="com.example.demo.model.ValueObject.Course">
+        update `course`
+        <set>
+            `name`=#{name},
+            `year_admission`=#{year_admission},
+            `profession`=#{profession},
+            `ifopen`=#{ifopen}
+        </set>
+        where `Cno`=#{Cno}
+    </update>
+    <!--更新老师与课程的关系-->
+    <update id="updateCourseTeacher" parameterType="com.example.demo.model.ValueObject.Course">
+        update `course_teacher`
+        <set>
+            `TID`=#{course.TID}
+        </set>
+        where `Cno`=#{course.Cno} and TID = #{oldTID}
+    </update>
+    <!--删除老师与课程的对应关系-->
+    <delete id="deleteCourseTeacher">
+        delete from `course_teacher` where `Cno`=#{Cno} and `TID`=#{TID}
+    </delete>
+    <!--删除课程-->
+    <delete id="deleteCourse">
+        delete  from `course` where `Cno`=#{Cno}
+    </delete>
+</mapper>

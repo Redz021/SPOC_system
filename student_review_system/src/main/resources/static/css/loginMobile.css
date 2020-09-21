@@ -1,0 +1,96 @@
+*{
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    list-style: noen;
+    font:italic 1em Georgia, serif;
+}
+html,body{
+    width: 100%;
+    height: 100%;
+}
+.bannerInfo{
+    display: none;
+}
+.wrapper{
+    width: 100%;
+    height: 100%;
+    background: url('../img/4.jpg') no-repeat;
+    position: relative;
+}
+.contain .loginContain{
+    width: 100%;
+    height: 100%;
+    background-color: inherit;
+}
+.contain .loginContain{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 80%;
+    height: 60%;
+    padding-top: 40px;
+    background:#00000060;
+    transform: translate(-50%,-50%);
+    border-radius: 5px;
+}
+
+.loginContain .loginInfo{
+    height: 100%;
+    width: 70%;
+    margin: 20px auto;
+    position: relative;
+}
+.loginInfo .title{
+    text-align: center;
+    overflow: hidden;
+}
+.loginInfo .title #title{
+    color: white;
+    height: 20px;
+    line-height: 20px;
+    font-size: 20px;
+    text-align: center;
+}
+#pwdCorn,
+#idCorn{
+    display: none;
+}
+.loginInfo .idInfo,
+.loginInfo .pwdInfo{
+    position: relative;
+    width: 100%;
+    padding: 20px 0;
+}
+.loginInfo .idInfo #idTitle,
+.loginInfo .pwdInfo #pwdTitle{
+    position: absolute;
+    right: -20px;
+    font-size: 20px;
+    bottom: 32px;
+    color: red;
+}
+.loginInfo .idInfo #id,
+.loginInfo .pwdInfo #pwd{
+    width: 100%;
+    background: inherit;
+    color: white;
+    height:40px;
+    line-height: 40px;
+    border: 1px solid white;
+    border-radius: 3px;
+    padding-left: 10px;
+}
+.loginInfo .submit{
+    padding: 30px 0;
+
+}
+.loginInfo .submit #submit{
+    width: 100%;
+    height: 40px;
+    background: linear-gradient(to right,#52b3d9,#4d13d1);
+    border-radius: 3px;
+    text-align: center;
+    line-height: 40px;
+    color: white;
+}

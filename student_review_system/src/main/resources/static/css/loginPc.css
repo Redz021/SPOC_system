@@ -1,0 +1,114 @@
+*{
+	margin:0;
+	padding: 0;
+	list-style: none;
+	text-decoration: none;
+}
+html,body {
+	width: 100%;
+	height: 100%;
+}
+
+.wrapper{
+	width: 100%;
+	height: 100%;
+	background-color: #f3f3f3;
+	padding: 20px 0;
+}
+
+.contain{
+	max-width: 80%;
+	min-width: 800px;
+	height: 100%;
+	border-radius: 10px;
+	margin:0 auto;
+	overflow: hidden;
+	box-shadow: 10px 10px 20px #888888,-10px -10px 20px #888888;
+
+	display: grid;
+	justify-content: center;
+	grid-template-columns: 1fr 1fr;
+	grid-template-rows: 100%;
+}
+#banner{
+	height: 100%;
+	width: 100%;
+}
+.wrapper .loginContain{
+	background:#22313f;
+}
+.wrapper .loginContain .loginInfo{
+	width: 70%;
+	margin: 150px auto;
+	background:#22313f;
+
+}
+.loginInfo .title{
+	width: 100%;
+	background:inherit;
+	margin-bottom: 50px;
+	overflow: hidden;
+}
+.loginInfo .title #title{
+	font:italic 1em Georgia, serif;
+	font-weight: 200;
+	font-size: 30px;
+	color: white;
+	cursor: help;
+}
+
+.loginInfo .idInfo,
+.loginInfo .pwdInfo{
+	position: relative;
+
+	width: 100%;
+	height: 40px;
+	margin: 40px 0;
+}
+#pwdTitle,
+#idTitle{
+	position: absolute;
+	right: 0px;
+	bottom: 8px;
+	color: red;
+	font-size: 20px;
+}
+.loginInfo .idInfo #id,
+.loginInfo .pwdInfo #pwd{
+	font:italic 1em Georgia, serif;
+	color: white;
+	width: 80%;
+	background: inherit;
+	border: 0;
+	height: 40px;
+	font-size: 14px;
+	padding-left:10px; 
+	border-bottom: 1px solid gray;
+}
+
+.loginInfo .idInfo #idCorn{
+	width: 32px;
+	height: 32px;
+	
+}
+.loginInfo .pwdInfo #pwdCorn{
+	width: 32px;
+	height: 32px;
+	
+}
+.loginInfo .submit{
+	width: 100%;
+	text-align: center;
+}
+.submit #submit{
+	font:italic 1em Georgia, serif;
+	width: 100px;
+	height: 40px;
+	line-height: 40px;
+	color: white;
+	font-size: 18px;
+	text-align: center;
+	border-radius: 10px;
+	background-color: #22a7f0;
+	cursor: pointer;
+}

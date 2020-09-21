@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.model.mapper.StudentMapper">
+    <!--查询所有学生-->
+    <resultMap id="SelStudents" type="com.example.demo.model.ValueObject.Student">
+        <result column="stuId" jdbcType="VARCHAR" property="stuId"/>
+        <result column="stuName" jdbcType="VARCHAR" property="stuName"/>
+        <result column="profession" jdbcType="VARCHAR" property="profession"/>
+        <result column="year_admission" jdbcType="VARCHAR" property="year_admission"/>
+    </resultMap>
+    <select id="SelStudents" parameterType="String" resultType="com.example.demo.model.ValueObject.Student">
+      select * from `Student`
+    </select>
+    <!--按专业查询学生-->
+    <resultMap id="SelStudentsWhere" type="com.example.demo.model.ValueObject.Student">
+        <result column="stuId" jdbcType="VARCHAR" property="stuId"/>
+        <result column="stuName" jdbcType="VARCHAR" property="stuName"/>
+        <result column="profession" jdbcType="VARCHAR" property="profession"/>
+        <result column="year_admission" jdbcType="VARCHAR" property="year_admission"/>
+    </resultMap>
+    <select id="SelStudentsWhere" parameterType="String" resultType="com.example.demo.model.ValueObject.Student">
+      select * from `Student`where profession= #{profession} and year_admission = #{year_admission}
+    </select>
+    <!--添加一个学生-->
+    <insert id="addStudent"  parameterType="com.example.demo.model.ValueObject.Student">
+      insert into student (`stuId`,`stuName`,`profession`,`year_admission`)
+      values
+      (#{stuId},#{stuName},#{profession},#{year_admission})
+    </insert>
+    <!--添加多个学生-->
+    <insert id="addStudents" parameterType="com.example.demo.model.ValueObject.Student">
+      insert into `student`(`stuId`,`stuName`,`profession`,`year_admission`)
+      values
+        <foreach item="item" collection="list" separator=","  index="index">
+            (#{item.stuId},#{item.stuName},#{item.profession},#{item.year_admission})
+        </foreach>
+
+    </insert>
+    <!--更新一个学生-->
+    <update id="updateStudent" parameterType="com.example.demo.model.ValueObject.Student">
+        update `Student`
+        <set>
+            stuId = #{student.stuId},
+            stuName = #{student.stuName},
+            profession = #{student.profession},
+            year_admission = #{student.year_admission}
+        </set>
+        where stuId = #{oldStuId}
+    </update>
+    <!--删除一个学生-->
+    <delete id="delStudent">
+        delete from `Student` where stuId = #{stuId}
+    </delete>
+</mapper>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.model.mapper.testInsertMapper">
+    <!--插入新的题目-->
+    <insert id="InsertQuestionAndGetTqNo" useGeneratedKeys="true" keyProperty="TqNo"  parameterType="com.example.demo.model.ValueObject.testQuestion">
+
+        INSERT INTO test_question (`Cno`, `type`, `describe`,
+        <if test="describe_pic!=null">
+            `describe_pic`,
+        </if>
+        <if test="parsing!=null">
+            `parsing`,
+        </if>
+
+        <if test="parsing_pic!=null">
+            `parsing_pic`,
+        </if>
+        `answer`,
+        <if test="answer_pic!=null">
+            `answer_pic`,
+        </if>
+        `submission_time`)
+         VALUES(
+         #{Cno},#{type},#{describe},
+        <if test="describe_pic!=null">
+            #{describe_pic},
+        </if>
+        <if test="parsing!=null">
+        #{parsing},
+        </if>
+        <if test="parsing_pic!=null">
+            #{parsing_pic},
+        </if>
+        #{answer},
+        <if test="answer_pic!=null">
+            #{answer_pic},
+        </if>
+        #{submission_time}
+         )
+    </insert>
+    <!--插入题目的选项-->
+    <insert id="InsertOption" parameterType="com.example.demo.model.ValueObject.testQuestionOptions">
+        insert into test_question_options (`TqNo`,`option`,`optionDescription`)
+        values
+        <foreach item="item" collection="list" separator=","  index="index">
+            (#{item.TqNo},#{item.option},#{item.optionDescription})
+        </foreach>
+    </insert>
+
+    <insert id="InsertTestPaper" useGeneratedKeys="true" keyProperty="TpNo" parameterType="com.example.demo.model.ValueObject.testPaper" >
+        insert into test_paper (`Cno`,`paperName`,`TqNo`)
+        values
+        (#{Cno},#{paperName},#{TqNo})
+    </insert>
+</mapper>
+

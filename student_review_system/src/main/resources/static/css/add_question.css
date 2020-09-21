@@ -1,0 +1,15 @@
+.container .title {
+  padding: 10px 0;
+}
+.container .mainCont {
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  padding: 2vw;
+}
+.container .mainCont .selections .selection {
+  margin-bottom: 10px;
+}
+.container .mainCont .selections ul {
+  padding: 0;
+  margin: 0;
+}

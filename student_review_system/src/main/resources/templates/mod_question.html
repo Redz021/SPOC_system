@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>修改试题</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="/static/css/mod_question.css">
+
+</head>
+
+<body>
+    <div class="bg-light">
+        <div class="container bg-light">
+            <nav class="navbar navbar-expand-lg sticky-top navbar-light bg-light">
+                <a class="navbar-brand" href="./index.html">
+                    <img src="/static/img/sut.jpg" style="width: 32px;height: 32px;" alt=""> Spoc
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+                    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="#">课程</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">试题册</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-container="body" data-toggle="popover" title="×暂时不可用" data-placement="bottom" data-content="我们的技术人员正在努力开发，请耐心等待">讨论区</a>
+                        </li>
+                    </ul>
+                    <form class="form-inline my-2 my-lg-0">
+                        <input class="form-control mr-sm-2" type="search" placeholder="Search">
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">搜索</button>
+                    </form>
+                </div>
+            </nav>
+        </div>
+    </div>
+    <div class="container" id="app">
+        <!-- <div class="row title">
+            <label for="category" class="col" style="font-size: 25px;">请选择试题类型</label>
+            <div class="col-sm-2">
+                <select class="form-control" name="category" id="category" v-model="type">
+                    <option v-for="item in category" :value="item.value">{{item.cate}}</option>
+                </select>
+            </div>
+        </div> -->
+        <div class="mainCont">
+            <div class="form-group row">
+                <label for="describe" class="col-sm-2 col-form-label">题干描述</label>
+                <div class="col-sm-10">
+                    <input v-model="question.describe" type="text" class="form-control" id="describe" placeholder="请输入题干描述信息">
+                    <small class="form-text text-muted">*必填</small>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="add_describe_pic" class="col-sm-2 col-form-label">添加图片(可选)</label>
+                <div class="col-sm-10">
+                    <input id="add_describe_pic" accept="image/jpeg" type="file" class="form-control-file">
+                </div>
+            </div>
+            <div v-if="question.type!='ShortAnswerQuestion'" class="selections">
+                <div class="form-group row">
+                    <label for="options" class="col-sm-2">选项</label>
+                    <div class="col-sm-10">
+                        <div class="selection" v-for="item in question.options">
+                            <input type="text" class="form-control" v-model="item.optionDescription">
+                        </div>
+                        <a @click="addOption">
+                            <svg t="1593695697972" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2676" width="25" height="25">
+                                <path d="M904 64c30.9 0 56 25.1 56 56v784c0 30.9-25.1 56-56 56H120c-30.9 0-56-25.1-56-56V120c0-30.9 25.1-56 56-56h784m0-64H120C53.7 0 0 53.7 0 120v784c0 66.3 53.7 120 120 120h784c66.3 0 120-53.7 120-120V120c0-66.3-53.7-120-120-120z" fill="" p-id="2677"></path>
+                                <path d="M736 480H288c-17.7 0-32 14.3-32 32s14.3 32 32 32h448c17.7 0 32-14.3 32-32s-14.3-32-32-32z" fill="" p-id="2678"></path><path d="M480 288v448c0 17.7 14.3 32 32 32s32-14.3 32-32V288c0-17.7-14.3-32-32-32s-32 14.3-32 32z" fill="" p-id="2679"></path>
+                            </svg>
+                        </a>
+                        <small>数量</small>
+                        <a @click="delOption">
+                            <svg t="1593695681269" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2552" width="25" height="25">
+                                <path d="M904 64c30.9 0 56 25.1 56 56v784c0 30.9-25.1 56-56 56H120c-30.9 0-56-25.1-56-56V120c0-30.9 25.1-56 56-56h784m0-64H120C53.7 0 0 53.7 0 120v784c0 66.3 53.7 120 120 120h784c66.3 0 120-53.7 120-120V120c0-66.3-53.7-120-120-120z" fill="" p-id="2553"></path>
+                                <path d="M736 480H288c-17.7 0-32 14.3-32 32s14.3 32 32 32h448c17.7 0 32-14.3 32-32s-14.3-32-32-32z" fill="" p-id="2554"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="SingleSelection_Answer" class="col-sm-2">答案</label>
+                    <div class="col-sm-10">
+                        <ul id="SingleSelection_Answer" style="list-style-type: none;">
+                            <li v-for="item in question.options">
+                                <label for=""><input :type="question.type=='SingleSelection'?'radio':'checkbox'" name="selection" :value="item.option" :checked="isAnswer(item.option)">
+                                    {{item.option}}.&nbsp;&nbsp;&nbsp;&nbsp;{{item.optionDescription}}
+                                </label>
+                            </li>
+                        </ul>
+                        <small class="form-text text-muted">*必填</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row" v-if="question.type=='ShortAnswerQuestion'">
+                <label for="ShortAnswer_Answer" class="col-sm-2">参考答案</label>
+                <div class="col-sm-10">
+                    <textarea v-model="question.answer" name="answer" id="ShortAnswer_Answer" rows="5" class="form-control"></textarea>
+                    <small class="form-text text-muted">*必填</small>
+                    <input type="file" class="form-control-file">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="parsing" class="col-sm-2">题目解析</label>
+                <div class="col-sm-10">
+                    <textarea v-model="question.parsing" name="parsing" id="parsing" rows="5" class="form-control"></textarea>
+                    <input type="file" class="form-control-file">
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-10 offset-sm-2">
+                    <button class="btn btn-primary" @click="collectAndSend">确认提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script src="http://libs.baidu.com/jquery/1.9.0/jquery.min.js"></script>
+    <!--<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>-->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="/static/js/mod_question.js"></script>
+
+</body>
+
+</html>

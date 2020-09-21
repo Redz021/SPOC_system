@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.model.mapper.collectionMapper">
+    <!--查询某课程下的所有收藏的试题-->
+    <resultMap id="getCourseCollections" type="com.example.demo.model.ValueObject.collections">
+        <result column="stuId" jdbcType="VARCHAR" property="stuId"/>
+        <result column="TqNo" jdbcType="VARCHAR" property="TqNo"/>
+        <result column="stuId" jdbcType="VARCHAR" property="stuId"/>
+    </resultMap>
+
+    <select id="getCourseCollection" parameterType="String" resultType="com.example.demo.model.ValueObject.collections">
+        select * from `collection` where stuId=#{stuId} and Cno = #{Cno}
+    </select>
+
+    <!--查询所有收藏的试题-->
+    <resultMap id="getAllCollections" type="com.example.demo.model.ValueObject.collections">
+        <result column="stuId" jdbcType="VARCHAR" property="stuId"/>
+        <result column="TqNo" jdbcType="VARCHAR" property="TqNo"/>
+        <result column="stuId" jdbcType="VARCHAR" property="stuId"/>
+    </resultMap>
+
+    <select id="getAllCollections" parameterType="String" resultType="com.example.demo.model.ValueObject.collections">
+        select * from `collection` where stuId=#{stuId}
+    </select>
+
+    <!--收藏一道试题-->
+    <insert id="collectQuestion" parameterType="com.example.demo.model.ValueObject.collections">
+        insert into `collection`(`Cno`,`stuId`,`TqNo`)
+        select #{Cno},#{stuId},#{TqNo} from dual
+        WHERE NOT EXISTS(SELECT `Cno`,`stuId`,`TqNo` FROM `collection` WHERE `Cno` = #{Cno} and `stuId` = #{stuId} and `TqNo` = #{TqNo} )
+    </insert>
+
+    <!--删除一道收藏的题-->
+    <delete id="deleteCollection">
+        delete from `collection` where stuId=#{stuId} and `TqNo`=#{TqNo}
+    </delete>
+
+
+    <!--获取指定试题号的题目详细信息-->
+    <resultMap id="getTestQuestions" type="com.example.demo.model.ValueObject.testQuestion">
+
+        <result column="TqNo" jdbcType="VARCHAR" property="TqNo" />
+        <result column="type" jdbcType="VARCHAR" property="type" />
+        <result column="describe" jdbcType="VARCHAR" property="describe" />
+        <result column="describe_pic" jdbcType="VARCHAR" property="describe_pic" />
+        <result column="parsing" jdbcType="VARCHAR" property="parsing" />
+        <result column="parsing_pic" jdbcType="VARCHAR" property="parsing_pic" />
+        <result column="answer" jdbcType="VARCHAR" property="answer" />
+        <result column="answer_pic" jdbcType="VARCHAR" property="answer_pic" />
+        <result column="submission_time" jdbcType="VARCHAR" property="submission_time" />
+    </resultMap>
+
+    <select id="getTestQuestions" parameterType="String" resultType="com.example.demo.model.ValueObject.testQuestion">
+        select * from test_question where TqNo in
+        <foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+</mapper>

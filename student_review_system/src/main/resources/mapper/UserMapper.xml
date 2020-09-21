@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.model.mapper.UserMapper">
+    <!--根据用户id查找-->
+    <resultMap id="BaseResultMap" type="com.example.demo.model.ValueObject.UserLogin">
+        <result column="id" jdbcType="INTEGER" property="id" />
+        <result column="password" jdbcType="VARCHAR" property="password" />
+        <result column="authority" jdbcType="VARCHAR" property="authority" />
+    </resultMap>
+
+    <select id="Sel" resultType="com.example.demo.model.ValueObject.UserLogin">
+        select * from user_log where id = #{id}
+    </select>
+
+    <resultMap id="studentInfo" type="com.example.demo.model.ValueObject.Student">
+
+        <result column="profession" jdbcType="VARCHAR" property="profession" />
+        <result column="year_admission" jdbcType="VARCHAR" property="year_admission" />
+        <result column="stuName" jdbcType="VARCHAR" property="stuName" />
+    </resultMap>
+
+    <select id="studentInfo" resultType="com.example.demo.model.ValueObject.Student">
+        select * from student where stuId = #{id}
+    </select>
+
+    <resultMap id="teacherInfo" type="com.example.demo.model.ValueObject.Teacher">
+        <result column="teacherName" jdbcType="VARCHAR" property="teacherName" />
+        <result column="department" jdbcType="VARCHAR" property="department" />
+    </resultMap>
+
+    <select id="TeacherInfo" resultType="com.example.demo.model.ValueObject.Teacher">
+        select * from teacher where TID = #{id}
+    </select>
+<!--新增用户-->
+    <insert id="addUser" parameterType="com.example.demo.model.ValueObject.UserLogin">
+        INSERT INTO `user_log` (`id`, `password`, `authority`, `enable`) VALUES
+        (#{id},#{password},#{authority},'1');
+    </insert>
+<!--更新用户-->
+    <update id="updateUser" parameterType="com.example.demo.model.ValueObject.UserLogin">
+        update `user_log`
+        <set>
+            <if test="user.id!=null">`id`=#{user.id},</if>
+            <if test="user.password!=null">`password`=#{user.password},</if>
+            <if test="user.authority!=null">`authority`=#{user.authority},</if>
+            `enable`='1'
+        </set>
+        where `id`=#{oldId}
+    </update>
+    <!--批量增加用户-->
+    <insert id="addUsers" parameterType="com.example.demo.model.ValueObject.UserLogin">
+        INSERT INTO `user_log` (`id`, `password`, `authority`, `enable`) VALUES
+        <foreach item="item" collection="list" separator=","  index="index">
+            (#{item.id},#{item.password},#{item.authority},'1')
+        </foreach>
+    </insert>
+    <!--删除用户-->
+    <delete id="deleteUser">
+        delete from `user_log`where id=#{id}
+    </delete>
+</mapper>

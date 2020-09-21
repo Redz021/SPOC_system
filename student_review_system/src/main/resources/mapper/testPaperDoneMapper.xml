@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.model.mapper.testPaperDoneMapper">
+    <insert id="doTestPaper" keyProperty="Dno" useGeneratedKeys="true" parameterType="com.example.demo.model.ValueObject.TestPaperDone" >
+        insert into `test_paper_done` (`stuId`,`TpNo`,`do_date`)
+        values (#{stuID},#{TpNo},#{doDate});
+    </insert>
+
+    <insert id="doTestPaperDetails" parameterType="com.example.demo.model.ValueObject.TestPaperDone">
+        insert into `test_paper_done_detail`(`Dno`,`answer`,`TqNo`,`ifwrong`)
+        values
+        <foreach collection="paper.testPaperDoneDetailsList" separator=","  index="index" item="item" >
+            (#{paper.Dno},#{item.answer},#{item.TqNo},#{item.ifwrong})
+        </foreach>
+    </insert>
+
+    <!--试题的错误率-->
+    <resultMap id="getQuestionsRate" type="com.example.demo.model.ValueObject.testQuestion">
+        <result column="TqNo" jdbcType="VARCHAR" property="TqNo"/>
+        <result column="rate" jdbcType="VARCHAR" property="rate"/>
+    </resultMap>
+
+    <select id="getQuestionsRate" parameterType="String" resultType="com.example.demo.model.ValueObject.testQuestion">
+        SELECT TqNo, (sum(ifwrong)/count(*)*100) as rate
+            FROM test_paper_done_detail ,test_paper_done
+            group by TqNo
+            having TqNo in
+            <foreach collection="list" separator="," close=")" open="(" item="item" index="index">
+                #{item.TqNo}
+            </foreach>
+    </select>
+
+    <!--试卷被多少人做过-->
+    <resultMap id="getTestPaperDoneTimes" type="com.example.demo.model.ValueObject.testPaper">
+        <result column="TpNo" jdbcType="VARCHAR" property="TpNo"/>
+        <result column="doneTimes" jdbcType="VARCHAR" property="doneTimes"/>
+    </resultMap>
+
+    <select id="getTestPaperDoneTimes" parameterType="String" resultType="com.example.demo.model.ValueObject.testPaper">
+    SELECT TpNo ,count(distinct TpNo) as  doneTimes
+        FROM test_paper_done
+        group by TpNo
+        having TpNo in
+        <foreach collection="list" separator="," close=")" open="(" item="item" index="index">
+            #{item.TpNo}
+        </foreach>
+    </select>
+</mapper>
