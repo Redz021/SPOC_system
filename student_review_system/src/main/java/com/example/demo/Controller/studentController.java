@@ -1,6 +1,7 @@
 package com.example.demo.Controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.example.demo.dao.StudentOperation;
 import com.example.demo.dao.courseConnection;
 import com.example.demo.model.Entity.CourseConnectEntity;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.LinkedHashMap;
 import java.util.List;
 @CrossOrigin
 @RestController
@@ -19,6 +21,7 @@ public class studentController {
     private final static String addStudentsUrl = "/admin/addStudents";//新增多个学生
     private final static String updateStudentUrl = "/admin/updateStudent";//更新一个学生
     private final static String deleteStudentUrl="/admin/deleteStudent";//删除一个学生
+    private final static String allProfessionUrl = "/admin/allProfession";//所有已有的学生专业
     @Autowired
     private courseConnection courseConnection;//课程与教师和学生的联系
 
@@ -41,17 +44,17 @@ public class studentController {
                              @RequestParam("year_admission")String year_admission,
                              @RequestParam("password")String password)
     {
-        studentOperation.addStudent(stuId, stuName, profession, year_admission, password);
-        return "{\"state\":\"success\"}";
+        if(studentOperation.addStudent(stuId, stuName, profession, year_admission, password))
+        {
+            return "{\"state\":\"success\"}";
+        }
+        return "{\"state\":null}";
     }
-    @RequestMapping(value=addStudentsUrl,produces = "application/json; charset=utf-8")
-    public String addStudents(@RequestParam("stuId")String []stuId,
-                             @RequestParam("stuName")String []stuName,
-                             @RequestParam("profession")String []profession,
-                             @RequestParam("year_admission")String []year_admission,
-                             @RequestParam("password")String []password)
+    @PostMapping(value=addStudentsUrl,produces = "application/json; charset=utf-8")
+    public String addStudents(@RequestBody JSONObject jsonParam)
     {
-        return studentOperation.addStudents(stuId, stuName, profession, year_admission, password);
+        List<LinkedHashMap<String,String>> students =  (List<LinkedHashMap<String,String>>)jsonParam.get("students");
+        return studentOperation.addStudents(students);
     }
     @RequestMapping(value=updateStudentUrl+"/{oldStuId}",produces = "application/json; charset=utf-8")
     public String updateStudent(@RequestParam("stuId")String stuId,
@@ -60,13 +63,21 @@ public class studentController {
                                 @RequestParam("year_admission")String year_admission,
                                 @PathVariable String oldStuId)
     {
-        studentOperation.updateStudent(stuId, stuName, profession, year_admission,oldStuId);
-        return "{\"state\":\"success\"}";
+        if(studentOperation.updateStudent(stuId, stuName, profession, year_admission,oldStuId))
+        {
+            return "{\"state\":\"success\"}";
+        }
+        return "{\"state\":null}";
     }
     @RequestMapping(value=deleteStudentUrl,produces = "application/json; charset=utf-8")
     public String deleteStudent(@RequestParam("stuId")String stuId)
     {
         studentOperation.deleteStudent(stuId);
         return "{\"state\":\"success\"}";
+    }
+    @RequestMapping(value=allProfessionUrl,produces = "application/json; charset=utf-8")
+    public String getAllProfession()
+    {
+        return JSON.toJSONString(studentOperation.getAllProfession());
     }
 }

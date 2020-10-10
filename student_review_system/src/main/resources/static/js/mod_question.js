@@ -2,12 +2,22 @@ var app = new Vue({
     el: "#app",
     data: {
         TqNo: 1,
-        question: {}
+        name:'',
+        question: {},
+        authority:''
     },
     mounted: function() {
         this.getQuestionInfo();
+        this.name = localStorage.name;
+        this.authority = localStorage.authority;
+        console.log('权限：'+ this.authority)
     },
     methods: {
+        // 退出登录
+        logout:function(){
+            axios.get('http://47.97.206.40/logout');
+            $(location).attr('href', 'http://47.97.206.40');
+        },
         addOption: function() {
             if (this.question.options.length < 8) {
                 let option = String.fromCharCode(65 + this.question.options.length);
@@ -34,7 +44,7 @@ var app = new Vue({
         getQuestionInfo: function() {
             this.TqNo = localStorage.tqNo;
             var that = this;
-            axios.get("http://127.0.0.1/course/QuestionDetail/" + that.TqNo)
+            axios.get("http://47.97.206.40/course/QuestionDetail/" + that.TqNo)
                 .then(res => {
                     this.question = res.data.question;
                     console.log(this.question)
@@ -76,7 +86,7 @@ var app = new Vue({
                 "answer_pic": answer_pic,
                 "options": options
             }
-            axios.post("http://www.stydehome.com/teacher/course/updateQuestion/" + TqNo, data)
+            axios.post("http://47.97.206.40/teacher/course/updateQuestion/" + TqNo, data)
                 .then(res => {
                     console.log(res);
                     alert("修改成功");

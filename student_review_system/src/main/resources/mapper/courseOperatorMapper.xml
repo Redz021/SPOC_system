@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.model.mapper.courseOperatorMapper">
+    <!--查询单个课程-->
+    <resultMap id="getCourse" type="com.example.demo.model.ValueObject.Course">
+        <result column="Cno" jdbcType="VARCHAR" property="Cno" />
+        <result column="year_admission" jdbcType="VARCHAR" property="year_admission" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="profession" jdbcType="VARCHAR" property="profession" />
+        <result column="ifopen" jdbcType="VARCHAR" property="ifopen" />
+        <result column="TID" jdbcType="VARCHAR" property="TID" />
+    </resultMap>
+    <select id="getCourse"  resultType="com.example.demo.model.ValueObject.Course">
+        select * from course ,course_teacher where course.Cno = course_teacher.Cno and course.Cno = #{Cno}
+    </select>
     <!--查询所有课程-->
     <resultMap id="getCourses" type="com.example.demo.model.ValueObject.Course">
         <result column="Cno" jdbcType="VARCHAR" property="Cno" />
@@ -53,4 +65,12 @@
     <delete id="deleteCourse">
         delete  from `course` where `Cno`=#{Cno}
     </delete>
+    <!--返回已有的学生专业-->
+    <resultMap id="getAllProfession" type="String">
+        <result column="profession" jdbcType="VARCHAR"></result>
+    </resultMap>
+
+    <select id="getAllProfession" parameterType="String" resultType="String">
+        select distinct profession from `student`
+    </select>
 </mapper>

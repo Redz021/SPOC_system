@@ -8,7 +8,7 @@ import lombok.*;
 
 @Data
 @ToString
-public class Teacher {
+public class Teacher implements user{
     private String TID;//职工号
     private String teacherName;//教师姓名
     private String department;//所在院系
@@ -25,5 +25,10 @@ public class Teacher {
             return this.TID.equals( ((Teacher) o).TID);
         }
         return false;
+    }
+    @Override
+    public String getId()
+    {
+        return TID;
     }
 }

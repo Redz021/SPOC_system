@@ -7,8 +7,7 @@ import com.example.demo.model.service.testPaperDoneService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @CrossOrigin
 @RestController
@@ -18,12 +17,14 @@ public class testPaperDoneController {
     @Autowired
     private testPaperDoneDao testPaperDoneDao;
 
-    @RequestMapping (value = doPaperUrl, produces = "application/json; charset=utf-8")
+    @PostMapping (value = doPaperUrl, produces = "application/json; charset=utf-8")
     public String doPaper(@RequestBody JSONObject jsonParam)
     {
         String stuId = (String)jsonParam.get("stuId");
         String TpNo = (String)jsonParam.get("TpNo");
-        Map<String,String>answer = (Map)JSON.parse((String)jsonParam.get("answer"));
-        return JSON.toJSONString((testPaperDoneDao.doTestPaper(TpNo,stuId,answer)));
+        //List<Map<String,String>> answers = (List<Map<String,String>>)JSON.parse((String)jsonParam.get("answers"));
+        List<LinkedHashMap<String,String>> answers = ( List<LinkedHashMap<String,String>>)jsonParam.get("answers");
+
+        return JSON.toJSONString((testPaperDoneDao.doTestPaper(TpNo,stuId,answers)));
     }
 }

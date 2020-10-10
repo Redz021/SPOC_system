@@ -1,4 +1,10 @@
-$('#submit').on('click',function () {
+$('#submit').on('click',log);
+$('#pwd').bind('keyup', function(event) {
+    if (event.keyCode == "13") {
+        $('#submit').click();
+    }
+});
+function log() {
     var username = $('#id').val().trim().replace(/\s/g,"");
     var pwd = $('#pwd').val().trim().replace(/\s/g,"");
     if (username == '' ||username == null){
@@ -10,7 +16,7 @@ $('#submit').on('click',function () {
         $('#idTitle').hide();
         $.ajax({
             type: "POST",
-            url: "http://127.0.0.1/login",
+            url: "http://47.97.206.40/login",
             data: {
                 "username": username,
                 "password": pwd
@@ -30,11 +36,13 @@ $('#submit').on('click',function () {
                     // localStorage.setItem("name",'David');
                     // localStorage.setItem("authority",'student');
                     localStorage.setItem("name",res.name);
+                    localStorage.setItem("id",username);
                     localStorage.setItem("authority",res.authority);
                     if (res.authority == 'admin') {
-                        alert('管理员页面尚在开发中，敬请期待');
+                        alert('你好，欢迎使用spoc系统');
+                        $(location).attr('href', 'http://47.97.206.40/admin');
                     }else{
-                        $(location).attr('href', 'http://127.0.0.1/course/mainPage');
+                        $(location).attr('href', 'http://47.97.206.40/course/mainPage');
                     }
                 }else {
                     alert('网络异常，请刷新页面！');
@@ -42,7 +50,7 @@ $('#submit').on('click',function () {
             }
         });
     }
-});
+}
 //
 // function isEmpty(val) {
 //     return val.length == 0 ? true : false;

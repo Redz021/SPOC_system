@@ -11,6 +11,11 @@ import java.util.List;
 public class courseOperatorService {
     @Autowired
     private courseOperatorMapper courseOperatorMapper;
+    //返回单个课程的全部信息
+    public Course getCourse(String Cno)
+    {
+        return courseOperatorMapper.getCourse(Cno);
+    }
     //查询所有课程
     public List<Course> getCourses()
     {
@@ -45,5 +50,10 @@ public class courseOperatorService {
     public void deleteCourse(String Cno)
     {
         courseOperatorMapper.deleteCourse(Cno);
+    }
+    //返回所有已有的学生专业
+    public List<String> getAllProfession()
+    {
+        return courseOperatorMapper.getAllProfession();
     }
 }

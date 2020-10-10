@@ -1,7 +1,9 @@
 new Vue({
     el: '#app',
     data: {
+        authority:"",
         Cno: "1",
+        name:'',
         type: "SingleSelection",
         describe: "",
         parsing: "",
@@ -21,22 +23,31 @@ new Vue({
         ],
         options: [{
                 option: "A",
-                optionDescription: "选项内容"
+                optionDescription: ""
             },
             {
                 option: "B",
-                optionDescription: "选项内容"
+                optionDescription: ""
             }
         ]
     },
-    mounted: function() {
+    created: function() {
         $("#SingleSelection").attr("selected", true);
+        this.authority=localStorage.authority;
+        this.name = localStorage.name;
+        this.Cno = localStorage.cno
+        console.log(this.name,this.Cno);
     },
     methods: {
+        // 退出登录
+        logout:function(){
+            axios.get('http://47.97.206.40/logout');
+            $(location).attr('href', 'http://47.97.206.40');
+        },
         addOption: function() {
             if (this.options.length < 8) {
                 let option = String.fromCharCode(65 + this.options.length);
-                this.options.push({ option: option, optionDescription: "选项内容" });
+                this.options.push({ option: option, optionDescription: "" });
             } else
                 alert("数量已达上限");
         },
@@ -87,7 +98,7 @@ new Vue({
                 "answer_pic": answer_pic,
                 "options": options
             }
-            axios.post("http://www.stydehome.com/teacher/course/addNewQuestion/" + Cno, data)
+            axios.post("http://47.97.206.40/teacher/course/addNewQuestion/" + Cno, data)
                 .then(res => {
                     console.log(res);
                     alert("添加成功");
@@ -99,4 +110,4 @@ new Vue({
                 })
         }
     }
-})
+});

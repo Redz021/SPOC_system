@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -64,7 +65,7 @@ public class testController {
         return assembling.GetAllTestQuestions(Cno.trim());
     }
 
-    @RequestMapping(value=insertNewQuestionUrl+"/{Cno}" ,produces = "application/json; charset=utf-8")//produces解决中文乱码问题
+    @PostMapping(value=insertNewQuestionUrl+"/{Cno}" ,produces = "application/json; charset=utf-8")//produces解决中文乱码问题
     public String addNewQuestion(@RequestBody JSONObject jsonParam,@PathVariable String Cno)
     {
 
@@ -87,7 +88,7 @@ public class testController {
         return JSON.toJSONString(assembling.InsertQuestionAndGetTqNo(Cno,type,describe,describe_pic,parsing,parsing_pic,
                answer,answer_pic,getCurrentTime.getTime(),options));
     }
-    @RequestMapping(value=updateQuestionUrl+"/{TqNo}" ,produces = "application/json; charset=utf-8")//produces解决中文乱码问题
+    @PostMapping(value=updateQuestionUrl+"/{TqNo}" ,produces = "application/json; charset=utf-8")//produces解决中文乱码问题
     public String updateQuestion(@RequestBody JSONObject jsonParam,@PathVariable String TqNo)
     {
         String type=(String)jsonParam.get("type");
@@ -109,20 +110,20 @@ public class testController {
         return JSON.toJSONString(assembling.updateQuestion(TqNo,type,describe,describe_pic,parsing,parsing_pic,
                 answer,answer_pic,getCurrentTime.getTime(),options));
     }
-    @RequestMapping(value=InsertPaperUrl ,produces = "application/json; charset=utf-8")
+    @PostMapping(value=InsertPaperUrl ,produces = "application/json; charset=utf-8")
     public String InsertPaper(@RequestBody JSONObject jsonParam)
     {
         String Cno = (String)jsonParam.get("Cno");
         String paperName = (String) jsonParam.get("paperName");
-        Map<String,String> TqNos = (Map)JSON.parse((String)jsonParam.get("TqNos"));
+        List<LinkedHashMap<String, String>> TqNos = ( List<LinkedHashMap<String,String>>)jsonParam.get("TqNos");
         return JSON.toJSONString(testPaperDao.InsertPaper(Cno,TqNos,paperName));
     }
-    @RequestMapping(value=updatePaperUrl+"/{TpNo}" ,produces = "application/json; charset=utf-8")
+    @PostMapping(value=updatePaperUrl+"/{TpNo}" ,produces = "application/json; charset=utf-8")
     public String updatePaper(@PathVariable String TpNo,@RequestBody JSONObject jsonParam)
     {
         String Cno = (String)jsonParam.get("Cno");
         String paperName = (String) jsonParam.get("paperName");
-        Map<String,String> TqNos = (Map)JSON.parse((String)jsonParam.get("TqNos"));
+        List<LinkedHashMap<String, String>> TqNos = ( List<LinkedHashMap<String,String>>)jsonParam.get("TqNos");
         return JSON.toJSONString(testPaperDao.updatePaper(TpNo,TqNos,paperName));
     }
     @RequestMapping(value=deletePaperUrl+"/{TpNo}" ,produces = "application/json; charset=utf-8")

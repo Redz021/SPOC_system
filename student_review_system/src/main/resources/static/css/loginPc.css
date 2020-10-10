@@ -43,6 +43,12 @@ html,body {
 	background:#22313f;
 
 }
+#Sname{
+	font-size: 32px;
+	color: white;
+	padding-bottom: 80px;
+	margin-top: -50px;
+}
 .loginInfo .title{
 	width: 100%;
 	background:inherit;
@@ -52,7 +58,7 @@ html,body {
 .loginInfo .title #title{
 	font:italic 1em Georgia, serif;
 	font-weight: 200;
-	font-size: 30px;
+	font-size: 26px;
 	color: white;
 	cursor: help;
 }
@@ -100,15 +106,69 @@ html,body {
 	width: 100%;
 	text-align: center;
 }
-.submit #submit{
-	font:italic 1em Georgia, serif;
+
+
+
+button{
+	margin-top: 50px;
 	width: 100px;
 	height: 40px;
 	line-height: 40px;
-	color: white;
-	font-size: 18px;
-	text-align: center;
-	border-radius: 10px;
-	background-color: #22a7f0;
 	cursor: pointer;
+	border-radius: 10px;
+	border:0;
+	color: #FFFFFF;
+	font-size: 15px;
+	background-image: linear-gradient(to right, #b8cbb8 0%, #b8cbb8 0%, #b465da 0%, #cf6cc9 33%, #ee609c 66%, #ee609c 100%);
+
+}
+
+
+#submit{
+	margin-top: 50px;
+	border-radius: 15px;
+	border:0;
+	display: inline-block;
+	position: relative;
+	font-size: 15px;
+	cursor: pointer;
+	background:linear-gradient(90deg, #03a9f4, #f441a5, #ffeb3b, #03a9f4);
+	background-size: 400%;
+	width: 70%;
+	height: 30px;
+	line-height: 30px;
+	text-align: center;
+	text-transform: uppercase;
+	color: #fff;
+	z-index: 1;
+}
+
+
+
+#submit::after{
+	content: '';
+	position: absolute;
+	top: -5px;
+	left: -5px;
+	right: -5px;
+	bottom: -5px;
+	background:linear-gradient(90deg, #03a9f4, #f441a5, #ffeb3b, #03a9f4);
+	background-size: 400%;
+	border-radius: 15px;
+	filter: blur(20px);
+	z-index: -1;
+}
+
+#submit:hover{
+	animation: go 8s infinite;
+}
+
+
+#submit:hover::after{
+	animation: go 8s infinite;
+}
+@keyframes go{
+	100%{
+		background-position: -400% 0;
+	}
 }

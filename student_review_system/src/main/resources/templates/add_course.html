@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>添加课程</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <!-- <link rel="stylesheet" href="/static/css/add_course.css"> -->
+    <style>
+        .container .mainCont {
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            padding: 2vw;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-light">
+        <div class="container bg-light">
+            <nav class="navbar navbar-expand-lg sticky-top navbar-light bg-light">
+                <a class="navbar-brand" href="./index.html">
+                    <img src="/static/img/sut.jpg" style="width: 32px;height: 32px;" alt=""> Spoc
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+                    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/admin">课程</a>
+                        </li>
+                        <li class="nav-item active d-md-none">
+                            <a class="nav-link" href="#">课程详情 <span class="sr-only">(current)</span></a>
+                        </li>
+                        <li class="nav-item active d-md-none">
+                            <a class="nav-link" href="#">用户详情<span class="sr-only">(current)</span></a>
+                        </li>
+                    </ul>
+                    <form class="form-inline my-2 my-lg-0">
+                        <input class="form-control mr-sm-2" type="search" placeholder="Search">
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">搜索</button>
+                    </form>
+                </div>
+            </nav>
+        </div>
+    </div>
+
+    <div class="container" id="app">
+        <!-- <button class="btn btn-outline-primary">返回</button> -->
+        <div class="mainCont">
+            <div v-if="state==true">
+                <div id="course_info" v-if="step==1">
+                    <div class="row">
+                        <h3 class="col">添加课程</h3>
+                    </div>
+                    <hr>
+                    <div class="form-group row">
+                        <div class="col-sm-6">
+                            <label for="">课程名称</label>
+                            <input v-model="name" type="text" class="form-control" placeholder="请输入课程名称">
+
+                        </div>
+                        <div class="col-sm-6">
+                            <label for="">添加课程封面</label>
+                            <input type="file" class="form-control-file">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-4">
+                            <label for="">上课年级</label>
+                            <select v-model="year_admission" class="form-control" name="grade" id="grade">
+                            <option value="17" selected>2017</option>
+                            <option value="18">2018</option>
+                            <option value="19">2019</option>
+                            <option value="20">2020</option>
+                        </select>
+                        </div>
+                        <div class="col-sm-8">
+                            <label for="">上课专业</label>
+                            <select v-model="profession" name="profession" id="profession" class="form-control">
+                            <option v-for="item in professions" :value="item">{{item}}</option>
+                        </select>
+                            <!-- <input type="text" class="form-control" placeholder="请输入上课专业"> -->
+                        </div>
+                    </div>
+                    <button class="btn btn-success" @click="nextStep">下一步</button>
+                    <a href="/admin" class="btn btn-outline-success">返回</a>
+                </div>
+
+                <div id="choose_teacher" v-if="step==2">
+                    <div class="form-group row">
+                        <div class="col">
+                            <label for="">选择任课教师</label>
+                            <!--<input type="text" class="form-control" placeholder="搜索任课教师...">-->
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col">
+                            <div class="card pre-scrollable">
+                                <label class="list-group-item list-group-item-action" :for="item.tID" style="margin: 0;" v-for="item in teachers">
+                                <input type="radio" name="teacher" :id="item.tID" :value="item.tID">
+                                <label :for="item.tID">{{item.teacherName}}</label>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-outline-success" @click="step=1">返回</button>
+                    <button class="btn btn-success" @click="addCourse">完成</button>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+    <script src="http://libs.baidu.com/jquery/1.9.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="/static/js/add_course.js"></script>
+</body>
+
+</html>

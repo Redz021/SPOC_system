@@ -4,10 +4,14 @@
     <resultMap id="getTestQuestionComment" type="com.example.demo.model.ValueObject.comment">
         <result column="comment" jdbcType="VARCHAR" property="comment"></result>
         <result column="userId" jdbcType="VARCHAR" property="userId"></result>
+        <result column="stuName" jdbcType="VARCHAR" property="stuName"></result>
+        <result column="time" jdbcType="VARCHAR" property="time"></result>
     </resultMap>
 
     <select id="getTestQuestionComment" parameterType="String" resultType="com.example.demo.model.ValueObject.comment">
-        select * from `comment` where `TqNo` = #{TqNo}
+        SELECT * FROM `comment` c left join `student` s
+            on c.userId = s.stuId
+            where TqNo = #{TqNo}
     </select>
 
     <insert id="insertComment" parameterType="com.example.demo.model.ValueObject.comment">

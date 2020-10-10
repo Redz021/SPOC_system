@@ -11,6 +11,8 @@ import java.util.List;
 @Component
 public class TeacherOperation {
     @Autowired
+    private userDao userDao;
+    @Autowired
     private TeacherService teacherService;
     @Autowired
     private userService userService;
@@ -20,8 +22,12 @@ public class TeacherOperation {
         return teacherService.getAllTeachers();
     }
     //新增一个老师
-    public void addTeacher(String TID,String name,String department,String password)
+    public boolean addTeacher(String TID,String name,String department,String password)
     {
+        if(userDao.ifUserExists(TID))
+        {
+            return false;
+        }
         Teacher teacher = new Teacher();
         UserLogin userLogin = new UserLogin();
         teacher.setTID(TID);
@@ -32,10 +38,27 @@ public class TeacherOperation {
         userLogin.setAuthority("teacher");
         teacherService.addTeacher(teacher);
         userService.addUser(userLogin);
+        return true;
     }
     //更新一个老师
-    public void updateTeacher(String TID,String name,String department,String oldTID)
+    public boolean updateTeacher(String TID,String name,String department,String oldTID)
     {
+        if(TID.equals(oldTID))
+        {
+            if(userDao.ifUserExists(oldTID))
+            {
+                Teacher teacher = new Teacher();
+                teacher.setTID(TID);
+                teacher.setTeacherName(name);
+                teacher.setDepartment(department);
+                teacherService.update(teacher,oldTID);
+                return true;
+            }
+        }
+        if(userDao.ifUserExists(TID))
+        {
+            return false;
+        }
         Teacher teacher = new Teacher();
         teacher.setTID(TID);
         teacher.setTeacherName(name);
@@ -47,6 +70,7 @@ public class TeacherOperation {
             userLogin.setId(TID);
             userService.updateUser(userLogin,oldTID);
         }
+        return true;
     }
     //删除一个老师
     public void deleteTeacher(String TID)

@@ -1,5 +1,6 @@
 package com.example.demo.dao;
 
+import com.example.demo.model.Entity.courseEntity;
 import com.example.demo.model.ValueObject.Course;
 import com.example.demo.model.ValueObject.Teacher;
 import com.example.demo.model.service.courseOperatorService;
@@ -12,13 +13,21 @@ import java.util.List;
 public class CourseOperation {
     @Autowired
     private courseOperatorService courseOperatorService;
+    //查询单个课程
+    public courseEntity getCourse(String Cno)
+    {
+        courseEntity courseEntity = new courseEntity();
+        courseEntity.setCourse(courseOperatorService.getCourse(Cno));
+        courseEntity.setState("success");
+        return courseEntity;
+    }
     //查询所有课程
     public List<Course> getCourses()
     {
         return courseOperatorService.getCourses();
     }
     //新增课程
-    public void addCourse(String name,String profession,String year_admission,String ifopen)
+    public Course addCourse(String name,String profession,String year_admission,String ifopen)
     {
         Course course = new Course();
         course.setName(name);
@@ -26,6 +35,7 @@ public class CourseOperation {
         course.setYear_admission(year_admission);
         course.setIfopen(ifopen);
         courseOperatorService.addCourse(course);
+        return course;
     }
     //新增教师与课程的关系
     public void addCourseTeacher(String Cno,String TID)

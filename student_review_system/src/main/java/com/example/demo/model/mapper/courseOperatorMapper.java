@@ -8,6 +8,8 @@ import java.util.List;
 
 @Repository
 public interface courseOperatorMapper {
+    //返回单个课程的全部信息
+    Course getCourse(String Cno);
     //查询所有课程
     List<Course> getCourses();
     //添加课程
@@ -22,4 +24,6 @@ public interface courseOperatorMapper {
     void deleteCourseTeacher(@Param("Cno") String Cno,@Param("TID")String TID);
     //删除课程
     void deleteCourse(String Cno);
+    //返回所有已有的学生专业
+    List<String> getAllProfession();
 }

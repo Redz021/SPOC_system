@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.web.cors.CorsUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -36,9 +37,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         // 开启允许iframe 嵌套
         http.headers().frameOptions().disable();
         http.authorizeRequests()
-                .antMatchers("/admin/**").permitAll()
-                .antMatchers("/course/**").permitAll()
-                .antMatchers("/teacher/**").permitAll()
+                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+                .antMatchers("/admin/**").hasAuthority("admin")
+                .antMatchers("/course/**").hasAnyAuthority("admin","teacher","student")
+                .antMatchers("/teacher/**").hasAnyAuthority("admin","teacher")
                 .antMatchers("/static/**").permitAll()
                 .anyRequest().authenticated()
                 .and()

@@ -23,4 +23,6 @@ public interface UserMapper {
     //删除用户
     void deleteUser(String id);
 
+    //更改密码
+    void ChangePassword(@Param("userId")String userId,@Param("password")String password);
 }

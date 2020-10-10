@@ -1,0 +1,11 @@
+.container .mainCont {
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    padding: 2vw;
+    margin: 10px 0;
+}
+
+.question {
+    border-top: dashed 1px #ddd;
+    padding-top: 10px;
+}

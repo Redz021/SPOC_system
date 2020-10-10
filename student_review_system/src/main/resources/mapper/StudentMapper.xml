@@ -29,7 +29,7 @@
     </insert>
     <!--添加多个学生-->
     <insert id="addStudents" parameterType="com.example.demo.model.ValueObject.Student">
-      insert into `student`(`stuId`,`stuName`,`profession`,`year_admission`)
+      replace into `student`(`stuId`,`stuName`,`profession`,`year_admission`)
       values
         <foreach item="item" collection="list" separator=","  index="index">
             (#{item.stuId},#{item.stuName},#{item.profession},#{item.year_admission})

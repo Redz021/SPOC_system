@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>主页</title>
+    <title>管理员页面</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!--使用Bootstrap的js插件，必须先调入jQuery-->
     <script src="http://libs.baidu.com/jquery/1.9.0/jquery.min.js"></script>
@@ -60,123 +60,100 @@
     </style>
 </head>
 <body class="">
-    <div class="bg-light" id="app" v-if="showPage">
-
-
-        <!-- Modal -->
-        <div class="modal fade" id="changePwd" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalCenterTitle">修改密码</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <input type="text" class="form-control" id="change" placeholder="new password">
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">取消</button>
-                        <button type="button" @click="changePwd()" class="btn btn-outline-primary">确认修改</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="container bg-light">
-            <nav class="navbar navbar-expand-lg sticky-top navbar-light bg-light">
-                <a class="navbar-brand" href="./index.html">
-                    <img src="/static/img/sut.jpg" style="width: 32px;height: 32px;" alt="">
-                    Spoc
-                </a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-                    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-                        <li class="nav-item active">
-                            <div class="dropdown">
-                                <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    {{ name }}
-                                </button>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <!-- Button trigger modal -->
-                                    <button  class="dropdown-item" data-toggle="modal" data-target="#changePwd">
-                                        修改密码
-                                    </button>
-                                    <a class="dropdown-item" @click="logout()" href="javascript:void(0)">退出登录</a>
-                                </div>
+<div class="bg-light" id="app" v-if="showPage">
+    <div class="container bg-light">
+        <nav class="navbar navbar-expand-lg sticky-top navbar-light bg-light">
+            <a class="navbar-brand" href="./index.html">
+                <img src="/static/img/sut.jpg" style="width: 32px;height: 32px;" alt="">
+                Spoc
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+                <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                    <li class="nav-item active">
+                        <div class="dropdown">
+                            <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                {{ name }}
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" @click="logout()" href="javascript:void(0)">退出登录</a>
                             </div>
-                        </li>
-                        <li class="nav-item active">
-                            <a class="nav-link" href="/course/mainPage">课程 <span class="sr-only">(current)</span></a>
-                        </li>
-                        <li v-if="authority == 'student'" class="nav-item">
-                            <a class="nav-link" href="http://47.97.206.40/course/my_collections">试题册</a>
-                        </li>
-
-                    </ul>
-                    <form class="form-inline my-2 my-lg-0">
-                        <input class="form-control mr-sm-2" type="search" placeholder="Search">
-                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">搜索</button>
-                    </form>
-                </div>
-            </nav>
-        </div>
-        <div class="container" id="infoArea" >
-            <!-- 课程导航栏 只有手机端显示 -->
-            <div>
-                <ul class="nav nav-tabs d-md-none">
-                  <li class="nav-item" v-for="(items, indexs) in courseList" @click="changeCourse(indexs)" >
-                    <a class="nav-link" v-bind:class="{active:indexs==current}" href="#">{{ items.name }}</a>
-                  </li>
+                        </div>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/admin">课程 <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li v-if="authority == 'student'" class="nav-item">
+                        <a class="nav-link" href="#">试题册</a>
+                    </li>
+                    <li class="nav-item active d-md-none">
+                        <a class="nav-link" href="#">课程详情 <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item active d-md-none">
+                        <a class="nav-link" href="#">用户详情<span class="sr-only">(current)</span></a>
+                    </li>
                 </ul>
+                <form class="form-inline my-2 my-lg-0">
+                    <input class="form-control mr-sm-2" type="search" placeholder="Search">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">搜索</button>
+                </form>
             </div>
-            <div class="row" style="height: 620px;">
-                <!--左侧边栏 手机端隐藏-->
-                <div class="col-3 shadow-sm d-none d-md-flex">
-                    <div class="card" style="min-width: 253px">
-                        <img style="min-height: 250px;" class="card-img-top" :src="current==0?'../static/img/java.jpg':'../static/img/cg.jpg'" alt="课程">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ name }}</h5>
-                            <p class="card-text" style="margin-bottom: 10px">good good study,day day up</p>
-                        </div>
-                        <div class="list-group list-group-flush">
-                            <button v-for="(item, index) in courseList" @click="changeCourse(index)" v-bind:class="{active:index==current}" type="button" class="list-group-item list-group-item-action">{{ item.name }}</button>
-                        </div>
-                        <div class="list-group list-group-flush">
-                            <button class="list-group-item list-group-item-action disabled">关于我们</button>
-                            <button class="list-group-item list-group-item-action disabled">提交建议</button>
-                        </div>
+        </nav>
+    </div>
+    <div class="container" id="infoArea" >
+        <!-- 课程导航栏 只有手机端显示 -->
+        <div>
+            <ul class="nav nav-tabs d-md-none">
+                <li class="nav-item" v-for="(items, indexs) in courseList" @click="changeCourse(indexs)" >
+                    <a class="nav-link" v-bind:class="{active:indexs==current}" href="#">{{ items.name }}</a>
+                </li>
+            </ul>
+        </div>
+        <div class="row">
+            <!--左侧边栏 手机端隐藏-->
+            <div class="col-3 shadow-sm d-none d-md-flex">
+                <div class="card" style="min-width: 253px">
+                    <img style="min-height: 250px;" class="card-img-top" :src="current==0?'../static/img/java.jpg':'../static/img/cg.jpg'" alt="课程">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ name }}</h5>
+                        <p class="card-text" style="margin-bottom: 10px">good good study,day day up</p>
+                    </div>
+                    <div class="list-group list-group-flush">
+                        <button v-for="(item, index) in courseList" @click="changeCourse(index)" v-bind:class="{active:index==current}" type="button" class="list-group-item list-group-item-action">{{ item.name }}</button>
+                    </div>
+                    <div class="list-group list-group-flush">
+                        <button class="list-group-item list-group-item-action " @click="gotoAddCourse">增加课程</button>
+                        <button class="list-group-item list-group-item-action " @click="gotoModCourse">修改课程</button>
+                        <button class="list-group-item list-group-item-action " @click="gotoUser()">用户详情</button>
+                    </div>
 
-                    </div>
                 </div>
-                <!--主要内容区,显示课程信息以及所有试卷概览-->
-                <div id="info" class="col shadow">
-                    <div>
-                        <h2 class="d-none d-md-flex">{{ courseList[current].name }}</h2>
-                    </div>
-                    <div>
-                        <!-- 所有试卷、试题导航栏 -->
-                        <ul class="nav nav-tabs" id="infoTab" role="tablist">
-                          <li class="nav-item">
+            </div>
+            <!--主要内容区,显示课程信息以及所有试卷概览-->
+            <div id="info" class="col shadow">
+                <div>
+                    <h2 class="d-none d-md-flex">{{ courseList[current].name }}</h2>
+                </div>
+                <div>
+                    <!-- 所有试卷、试题导航栏 -->
+                    <ul class="nav nav-tabs" id="infoTab" role="tablist">
+                        <li class="nav-item">
                             <a class="nav-link active" id="paperTab" data-toggle="tab" href="#paper" role="tab" aria-controls="paper" aria-selected="true">所有试卷</a>
-                          </li>
-                          <li class="nav-item">
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" id="profile-tab" data-toggle="tab" href="#questions" role="tab" aria-controls="questions" aria-selected="false">所有试题</a>
-                          </li>
-                        </ul>
-                        <div class="tab-content" id="myTabContent">
-                          <div class="tab-pane fade show active" id="paper" role="tabpanel" aria-labelledby="paper-tab">
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade show active" id="paper" role="tabpanel" aria-labelledby="paper-tab">
                             <div class="list-group" style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">
 
                                 <div  v-for="(paper,index) in paperList" class="list-group-item list-group-item-action rele">
                                     <div class="row">
-                                        <div class="col-8 col-md-9" style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">
+                                        <div class="col-10 col-md-11" style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">
                                             <span class="pointer" @click="gotoDoPaper(paper)">{{ paper.paperName }}</span>
-                                        </div>
-                                        <div class="col-2 col-md-2" style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">
-                                            <span class="pointer" @click="gotoDoPaper(paper)">已作答{{ paper.doneTimes }}人次</span>
                                         </div>
                                         <div class="col-2 col-md-1">
                                             <a class="cha" @click="deletePaper(paper)" v-if="authority!='student'">×</a>
@@ -208,12 +185,12 @@
                                     </nav>
                                 </div>
                             </div>
-                          </div>
-                          <div class="tab-pane fade" id="questions" role="tabpanel" aria-labelledby="questions-tab">
+                        </div>
+                        <div class="tab-pane fade" id="questions" role="tabpanel" aria-labelledby="questions-tab">
                             <div class="list-group">
-                                <div class="list-group-item list-group-item-action rele">
+                                <div v-if="authority != 'student'"  class="list-group-item list-group-item-action rele">
 
-                                    <div v-if="authority != 'student'" class="btn-group" role="group" aria-label="Basic">
+                                    <div class="btn-group" role="group" aria-label="Basic">
                                         <button type="button" @click="gotoAdd()" class="btn btn-secondary">添加试题</button>
                                         <button type="button" @click="createPaper()" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModalLong">生成试卷</button>
                                     </div>
@@ -224,32 +201,32 @@
 
                                 <!-- Modal -->
                                 <!--<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">-->
-                                    <!--<div class="modal-dialog modal-dialog-centered" role="document">-->
-                                        <!--<div class="modal-content">-->
-                                            <!--<div class="modal-header">-->
-                                                <!--<h5 class="modal-title" id="exampleModalCenterTitle">生成试卷</h5>-->
-                                                <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
-                                                    <!--<span aria-hidden="true">&times;</span>-->
-                                                <!--</button>-->
-                                            <!--</div>-->
-                                            <!--<div class="modal-body" style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">-->
-                                                <!--<div class="form-group">-->
-                                                    <!--<label for="input1">试卷名</label>-->
-                                                    <!--<input type="text" class="form-control" id="input1" placeholder="试卷名">-->
-                                                <!--</div>-->
-                                                <!--<div>-->
-                                                    <!--共选中:{{ selected.length }}道题-->
-                                                <!--</div>-->
-                                                <!--<div v-for="question in selected" >-->
-                                                    <!--{{ question.describe }}-->
-                                                <!--</div>-->
-                                            <!--</div>-->
-                                            <!--<div class="modal-footer">-->
-                                                <!--<button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>-->
-                                                <!--<button type="button" class="btn btn-primary" @click="submit()">确认生成！</button>-->
-                                            <!--</div>-->
-                                        <!--</div>-->
-                                    <!--</div>-->
+                                <!--<div class="modal-dialog modal-dialog-centered" role="document">-->
+                                <!--<div class="modal-content">-->
+                                <!--<div class="modal-header">-->
+                                <!--<h5 class="modal-title" id="exampleModalCenterTitle">生成试卷</h5>-->
+                                <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
+                                <!--<span aria-hidden="true">&times;</span>-->
+                                <!--</button>-->
+                                <!--</div>-->
+                                <!--<div class="modal-body" style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">-->
+                                <!--<div class="form-group">-->
+                                <!--<label for="input1">试卷名</label>-->
+                                <!--<input type="text" class="form-control" id="input1" placeholder="试卷名">-->
+                                <!--</div>-->
+                                <!--<div>-->
+                                <!--共选中:{{ selected.length }}道题-->
+                                <!--</div>-->
+                                <!--<div v-for="question in selected" >-->
+                                <!--{{ question.describe }}-->
+                                <!--</div>-->
+                                <!--</div>-->
+                                <!--<div class="modal-footer">-->
+                                <!--<button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>-->
+                                <!--<button type="button" class="btn btn-primary" @click="submit()">确认生成！</button>-->
+                                <!--</div>-->
+                                <!--</div>-->
+                                <!--</div>-->
                                 <!--</div>-->
 
                                 <!-- Modal -->
@@ -287,69 +264,17 @@
                                 <div  v-for="(question,ind) in questionsList" class="list-group-item list-group-item-action rele">
                                     <!--<input style="margin-left: 10px;position: static!important;" :id="'x'+(ind+(currentQuestion-1)*8)" type="checkbox" class="form-check-input" name="Check1">-->
                                     <div class="row " style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">
-                                        <div class="col-5 col-md-6 form-check" style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">
+                                        <div class="col-7 col-md-8 form-check" style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">
                                             <input v-if="authority!='student'" class="form-check-input" type="checkbox" value="" name="Check1" :id="'x'+(ind+(currentQuestion-1)*8)">
                                             <label class="form-check-label" :for="'x'+(ind+(currentQuestion-1)*8)">
                                                 {{ ind+(currentQuestion-1)*8 + 1 }}.
                                             </label>
                                             <span @click="gotoQuestion(question.tqNo)" class="pointer">{{ question.describe }}</span>
                                         </div>
-                                        <div class="col-2 col-md-2" style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">
+                                        <div class="col-3 col-md-3" style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">
                                             <span>{{ question.type=='ShortAnswerQuestion'?'简答题':question.type=='SingleSelection'?'单选题':'多选题' }}</span>
                                         </div>
-                                        <div class="col-2 col-md-2" style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">
-                                            <span>错误率：{{ Math.round(question.rate) }}%</span>
-                                        </div>
-                                        <div class="col-1 col-md-1" >
-                                            <!-- Button trigger modal -->
-                                            <button @click="getComments(question)" type="button" class="btn btn-link btn-sm" data-toggle="modal" data-target="#Long">
-                                                讨论区
-                                            </button>
-                                        </div>
                                         <div class="col-2 col-md-1"><a class="cha" @click="deleteQuestion(question)" v-if="authority!='student'">×</a></div>
-                                    </div>
-                                </div>
-
-                                <!--讨论区-->
-                                <div class="modal fade" id="Long" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="LongTitle">{{ question.describe }}的讨论区</h5>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body" >
-                                               <div class="card bg-light" v-for="comments in commentList" style="margin-bottom: 10px">
-                                                   <div v-if="commentList.length"  class="card-body">
-                                                       <h5 class="card-title">{{ comments.stuName }}:</h5>
-                                                       <p class="card-text">{{ comments.comment }}</p>
-                                                       <p class="card-text"><small class="text-muted">{{comments.time}}</small></p>
-                                                   </div>
-                                               </div>
-                                                <div class="card bg-light">
-                                                    <div v-if="commentList.length==0"  class="card-body">
-                                                        <h5 class="card-title">这道题还没有人讨论呢</h5>
-                                                    </div>
-                                                </div>
-                                               <div class="alert alert-warning alert-dismissible fade show" id="alert" role="alert">
-                                                   <strong>提示：</strong> 评论一经发表无法撤回！！！
-                                                   <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                       <span aria-hidden="true">&times;</span>
-                                                   </button>
-                                               </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <div class="input-group mb-3">
-                                                    <input type="text" id="comment" class="form-control" placeholder="畅所欲言吧，少年！" aria-label="畅所欲言吧，少年！" aria-describedby="basic-addon2">
-                                                    <div class="input-group-append">
-                                                        <button @click="sendComments(question)" type="button" class="btn btn-outline-secondary">发表评论</button>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
 
@@ -377,14 +302,13 @@
                                     </nav>
                                 </div>
                             </div>
-                          </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
+</div>
 <script>
     $(function () {
         $('[data-toggle="popover"]').popover();
@@ -392,6 +316,8 @@
     var app = new Vue({
         el: "#app",
         data:{
+            //当前选中课程号
+            Cno:"",
             // 课程列表
             courseList:[],
             // 该课程所有试卷
@@ -414,17 +340,12 @@
             current:0,
             // 用户名
             name:'',
-            // userId
-            userId:'',
             // 用户权限
             authority:'',
             // 是否显示页面，在页面数据请求完之前为false
             showPage:false,
             // 选中的试题
-            selected:[],
-            // 获取到的评论
-            commentList:[],
-            question:{}
+            selected:[]
         },
         mounted:function(){
             this.getAuothority();
@@ -440,14 +361,13 @@
             getAuothority:function(){
                 this.name = localStorage.name;
                 this.authority = localStorage.authority;
-                this.userId = localStorage.id;
                 console.log('用户：'+ this.name + '\n'+ '权限：' + this.authority);
             },
             // 获取所有课程
             getCourse:function(){
                 var that = this;
-                axios.get('http://47.97.206.40/course').then(function(response){
-                    that.courseList = response.data.courses;
+                axios.get('http://47.97.206.40/admin/course/getAllCourses').then(function(response){
+                    that.courseList = response.data;
                     console.log(response);
                     console.log('成功获取课程');
                     that.getPaper();
@@ -460,7 +380,6 @@
             // 获取课程对应的试卷
             getPaper:function(){
                 var that = this;
-                console.log("课程号"+that.courseList[that.current].cno)
                 axios.get('http://47.97.206.40/course/allTestPapers/' + that.courseList[that.current].cno).then(function(response){
                     that.coursePaper = response.data.testPapers;
                     console.log(response);
@@ -491,6 +410,8 @@
             // 改变当前的课程 并重新获取试卷和试题
             changeCourse:function (index) {
                 this.current = index;
+                localStorage.setItem('cno',this.courseList[this.current].cno);
+                console.log(localStorage.cno);
                 this.getPaper();
                 this.getQuestions();
             },
@@ -534,23 +455,20 @@
             },
             gotoQuestion:function (tqNo) {
                 localStorage.setItem('tqNo',tqNo);
-                if (this.authority == 'teacher'){
-                    $(location).attr('href', 'http://47.97.206.40/teacher/course/mod_question');
-                } else{
-                    $(location).attr('href', 'http://47.97.206.40/course/stuquestion');
-                }
-
-
+                localStorage.setItem('authority',this.authority);
+                $(location).attr('href', '/teacher/course/mod_question');
             },
             gotoAdd:function () {
-                localStorage.setItem('cno',this.courseList[this.current].cno);
+                localStorage.setItem('authority',this.authority);
                 $(location).attr('href', '/teacher/course/add_question');
             },
             gotoDoPaper:function(paper){
                 localStorage.setItem('cno',this.courseList[this.current].cno);
                 localStorage.setItem('tpNo',paper.tpNo);
-                localStorage.setItem('paperName',paper.paperName);
-                $(location).attr('href', '/course/do_paperPage');
+                $(location).attr('href', '/teacher/course/do_paperPage');
+            },
+            gotoUser:function(){
+                $(location).attr('href', '/admin/user');
             },
             createPaper:function () {
                 var that = this;
@@ -582,10 +500,10 @@
                     console.log(res);
                 alert("成功!");
                 window.location.reload();
-                }).catch(err => {
+            }).catch(err => {
                     console.error(err);
-                    alert("失败!");
-                })
+                alert("失败!");
+            })
             },
             saveSelected:function () {
                 var that = this;
@@ -593,46 +511,15 @@
                     var sel = parseInt(element.id.substr(1));
                     that.selected.push(that.courseQuestions[sel]);
                     $(this).prop('checked',false);
-
                 });
             },
-            // 获取评论
-            getComments:function (question) {
-                this.question = question;
-                var that = this;
-                axios.get('http://47.97.206.40/course/testQuestion/getComments/?TqNo=' + question.tqNo).then(function(response){
-                    console.log('成功获取评论');
-                    console.log(response);
-                    that.commentList = response.data.commentList;
-                    that.commentTqNo = question.tqNo;
-
-                });
+            gotoAddCourse:function () {
+                $(location).attr('href', '/admin/course/add_course');
             },
-            //  发表评论
-            sendComments:function (question) {
-                var that = this;
-                var co = $('#comment').val().trim().replace(/\s/g,"");
-                console.log('tqNo:'+question.tqNo);
-                console.log('co:'+co);
-                console.log('userId:'+that.userId);
-                axios.get('http://47.97.206.40/course/testQuestion/addComment?TqNo=' + question.tqNo + '&comment=' + co +
-                '&userId=' + that.userId).then(function(response){
-                    console.log('成功发表评论');
-                    console.log(response);
-                    $("#alert").alert();
-                    that.getComments(question);
-                });
-            },
-            changePwd:function () {
-                var pwd = $('#change').val().trim().replace(/\s/g,"");
-                if(pwd ==''){
-                    alert('不能为空！');
-                }else{
-                    axios.get('http://47.97.206.40/course/changePassword/?password=' + pwd).then(function(response){
-                        alert('成功修改密码');
-                        console.log(response);
-                    });
-                }
+            gotoModCourse:function () {
+                localStorage.setItem('cno',this.courseList[this.current].cno);
+                // console.log(localStorage.cno);
+                $(location).attr('href', '/admin/course/mod_course');
             }
         }
     })

@@ -7,11 +7,15 @@ import lombok.*;
  */
 @Data
 @ToString
-public class Student {
+public class Student implements user{
     private String stuId;//学号
     private String stuName;//姓名
     private String profession;//专业（计算机）
     private String year_admission;//入学时间（17)
 
-
+    @Override
+    public String getId()
+    {
+        return stuId;
+    }
 }

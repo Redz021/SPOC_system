@@ -12,10 +12,7 @@ import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 @Data
@@ -29,21 +26,29 @@ public class testPaperDao {
     {
         AllTestPapersEntity a = new AllTestPapersEntity();
         List<testPaper>testPapers = courseService.GetAllTestPapersSummary(Cno);
-        List<testPaper>t = testPaperDoneService.getTestPaperDoneTimes(testPapers);//获取试卷被多少人做过
-        for(testPaper tp:testPapers)
+        if(testPapers!=null&&!testPapers.isEmpty())
         {
-            for(testPaper s:t)
+            List<testPaper>t = testPaperDoneService.getTestPaperDoneTimes(testPapers);//获取试卷被多少人做过
+            if(t!=null&&!t.isEmpty())
             {
-                if(s.getTpNo().equals(tp.getTpNo()))
+                for(testPaper tp:testPapers)
                 {
-                    tp.setDoneTimes(s.getDoneTimes());
+                    for(testPaper s:t)
+                    {
+                        if(s.getTpNo().equals(tp.getTpNo()))
+                        {
+                            tp.setDoneTimes(s.getDoneTimes());
+                        }
+                    }
+                    if(tp.getDoneTimes()==null||tp.getDoneTimes().isEmpty())
+                    {
+                        tp.setDoneTimes("0");
+                    }
                 }
             }
-            if(tp.getDoneTimes()==null||tp.getDoneTimes().isEmpty())
-            {
-                tp.setDoneTimes("0");
-            }
         }
+
+
         a.setTestPapers(testPapers);
         if(a.getTestPapers()!=null&&!a.getTestPapers().isEmpty())
         {
@@ -101,14 +106,18 @@ public class testPaperDao {
     @Autowired
     private testInsertService testInsertService;
     //插入一张新的试卷
-    public testPaper InsertPaper(String Cno, Map<String,String> TqNos, String paperName)
+    public testPaper InsertPaper(String Cno, List<LinkedHashMap<String, String>> TqNos, String paperName)
     {
         testPaper testPaper = new testPaper();
         testPaper.setCno(Cno);
         String tmp="[";
-        for(String value : TqNos.values()){
-            tmp+=value;
-            tmp+=",";
+        for(Map<String,String> m:TqNos)
+        {
+            for(String value : m.values()){
+                tmp+=value;
+                tmp+=",";
+            }
+
         }
         tmp=tmp.substring(0,tmp.length()-1);
         tmp+="]";
@@ -122,14 +131,18 @@ public class testPaperDao {
     @Autowired
     private testDeleteService testDeleteService;
     //更新试卷
-    public testPaper updatePaper(String TpNo,Map<String,String> TqNos,String paperName)
+    public testPaper updatePaper(String TpNo,List<LinkedHashMap<String, String>> TqNos,String paperName)
     {
         testPaper testPaper = new testPaper();
         testPaper.setTpNo(TpNo);
         String tmp="[";
-        for(String value : TqNos.values()){
-            tmp+=value;
-            tmp+=",";
+        for(Map<String,String> m:TqNos)
+        {
+            for(String value : m.values()){
+                tmp+=value;
+                tmp+=",";
+            }
+
         }
         tmp=tmp.substring(0,tmp.length()-1);
         tmp+="]";

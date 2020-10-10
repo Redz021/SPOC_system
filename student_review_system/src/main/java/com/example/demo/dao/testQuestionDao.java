@@ -29,23 +29,30 @@ public class testQuestionDao {
     {
         AllTestQuestionsEntity a = new AllTestQuestionsEntity();
         List<testQuestion> t =courseService.GetAllTestQuestions(Cno);
-        List<testQuestion> rates =  testPaperDoneService.getQuestionsRate(t);
-        for(testQuestion tq:t)
+        if(t!=null&&!t.isEmpty())
         {
-            for(testQuestion s : rates)
+            List<testQuestion> rates =  testPaperDoneService.getQuestionsRate(t);
+            if(rates!=null&&!rates.isEmpty())
             {
-                if(tq.getTqNo()==s.getTqNo())
+                for(testQuestion tq:t)
                 {
-                    tq.setRate(s.getRate());
-                    continue;
-                }
+                    for(testQuestion s : rates)
+                    {
+                        if(tq.getTqNo()==s.getTqNo())
+                        {
+                            tq.setRate(s.getRate());
+                            continue;
+                        }
 
-            }
-            if(tq.getRate()==null)
-            {
-                tq.setRate("0");
+                    }
+                    if(tq.getRate()==null)
+                    {
+                        tq.setRate("0");
+                    }
+                }
             }
         }
+
         a.setTestQuestions(t);
         if(a.getTestQuestions()!=null&&!a.getTestQuestions().isEmpty())
         {

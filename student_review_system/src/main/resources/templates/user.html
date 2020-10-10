@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>用户详情</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!--使用Bootstrap的js插件，必须先调入jQuery-->
+    <script src="http://libs.baidu.com/jquery/1.9.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" media="screen and (max-width: 300px)" href="../static/css/mainPagePc.css">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    <!--引入vue-->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!--引入axios-->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <style>
+        td{
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+    </style>
+</head>
+<body>
+<div class="container bg-light" id="app">
+    <div class="header">
+        <nav class="navbar navbar-expand-lg sticky-top navbar-light bg-light">
+            <a class="navbar-brand" href="./index.html">
+                <img src="/static/img/sut.jpg" style="width: 32px;height: 32px;" alt="">
+                Spoc
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+                <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                    <li class="nav-item active">
+                        <div class="dropdown">
+                            <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                {{ name }}
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" @click="logout()" href="javascript:void(0)">退出登录</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/course/mainPage">课程 <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li v-if="authority == 'student'" class="nav-item">
+                        <a class="nav-link" href="#">试题册</a>
+                    </li>
+                    <li class="nav-item active d-md-none">
+                        <a class="nav-link" href="#">课程详情 <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item active d-md-none">
+                        <a class="nav-link" href="#">用户详情<span class="sr-only">(current)</span></a>
+                    </li>
+                </ul>
+                <form class="form-inline my-2 my-lg-0">
+                    <input class="form-control mr-sm-2" type="search" placeholder="Search">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">搜索</button>
+                </form>
+            </div>
+        </nav>
+    </div>
+    <div class="container">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">学生相关</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">教师相关</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent" style="padding: 20px 0">
+            <!--学生部分-->
+            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                <div class="row">
+                    <div class=" col-2 nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                        <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true">所有学生列表</a>
+                        <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false">增加单个学生</a>
+                        <a class="nav-link" id="v-pills-ss-tab" data-toggle="pill" href="#v-pills-ss" role="tab" aria-controls="v-pills-ss" aria-selected="false">修改学生信息</a>
+                        <a class="nav-link" id="v-pills-messages-tab" data-toggle="pill" href="#v-pills-messages" role="tab" aria-controls="v-pills-messages" aria-selected="false">批量增加学生</a>
+                        <a class="nav-link" id="v-pills-settings-tab" data-toggle="pill" href="#v-pills-settings" role="tab" aria-controls="v-pills-settings" aria-selected="false">条件查询学生</a>
+                    </div>
+                    <div class="col-10 tab-content" id="v-pills-tabContent">
+                        <!--所有学生列表-->
+                        <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+
+                            <table class="table table-bordered table-striped">
+                                <thead class="thead-light">
+                                    <tr class="" style="width: 100%;height: 30px;">
+                                        <td style="width: 20%;">名字</td>
+                                        <td style="width: 20%;">入学年级</td>
+                                        <td style="width: 25%;">专业</td>
+                                        <td style="width: 25%;">学号</td>
+                                        <td style="width: 10%;">
+                                            <button type="button" @click="alert('最好不要这样')" class="btn btn-outline-dark btn-sm">删除全部</button>
+                                        </td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                <tr v-for="student in allStudents">
+                                    <td style="width: 18%;">{{ student.stuName }}</td>
+                                    <td style="width: 20%;">{{ student.year_admission }}</td>
+                                    <td style="width: 25%;">{{ student.profession }}</td>
+                                    <td style="width: 22%;">{{ student.id }}</td>
+                                    <td style="width: 15%;">
+                                        <button type="button" @click="deleteStudent(student.id)" class="btn btn-outline-dark btn-sm">删除</button>
+                                        <button type="button" @click="reset(student.id)" class="btn btn-outline-dark btn-sm">重置密码</button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!--增加单个学生-->
+                        <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+                            <form>
+                                <div class="form-group">
+                                    <label for="stuName">学生姓名</label>
+                                    <input type="text" class="form-control" id="stuName" placeholder="学生姓名">
+                                    <small id="nameHelp" class="form-text text-muted">正确输入就行，千万别空</small>
+                                </div>
+                                <div class="form-group">
+                                    <label for="Password1">Password</label>
+                                    <input type="password" class="form-control" id="Password1" placeholder="123456">
+                                    <small id="passwordHelp" class="form-text text-muted">初始密码为123456</small>
+                                </div>
+                                <div class="form-group">
+                                    <label for="id">学号</label>
+                                    <input type="text" class="form-control" id="id" placeholder="170405108">
+                                    <small id="idHelp" class="form-text text-muted">这是我学号，别整错了</small>
+                                </div>
+                                <div class="form-group">
+                                    <label for="profession">学生专业</label>
+                                    <input type="text" class="form-control" id="profession" placeholder="计算机专业">
+                                    <small id="professionHelp" class="form-text text-muted">我不管默认就是计算机专业</small>
+                                </div>
+                                <div class="form-group">
+                                    <label for="year">入学年份</label>
+                                    <input type="text" class="form-control" id="year" placeholder="17">
+                                    <small id="yearHelp" class="form-text text-muted">我是17级的默认也就17级</small>
+                                </div>
+                                <button type="button" @click="submit()" class="btn btn-primary">生成学生</button>
+                            </form>
+                        </div>
+                        <!--修改学生信息-->
+                        <div class="tab-pane fade" id="v-pills-ss" role="tabpanel" aria-labelledby="v-pills-ss-tab">
+                            <form>
+                                <div class="form-group">
+                                    <label for="oldid">原学号</label>
+                                    <input type="text" class="form-control" id="oldid" placeholder="170405108">
+                                    <small id="oldidHelp" class="form-text text-muted">一定是原先的学号，别打错了</small>
+                                </div>
+                                <div class="form-group">
+                                    <label for="newstuName">新学生姓名</label>
+                                    <input type="text" class="form-control" id="newstuName" placeholder="学生姓名">
+                                    <small id="newnameHelp" class="form-text text-muted">正确输入就行，千万别空</small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="newid">学号</label>
+                                    <input type="text" class="form-control" id="newid" placeholder="170405108">
+                                    <small id="newidHelp" class="form-text text-muted">这是我学号，别整错了</small>
+                                </div>
+                                <div class="form-group">
+                                    <label for="newprofession">学生专业</label>
+                                    <input type="text" class="form-control" id="newprofession" placeholder="计算机专业">
+                                    <small id="newprofessionHelp" class="form-text text-muted">我不管默认就是计算机专业</small>
+                                </div>
+                                <div class="form-group">
+                                    <label for="newyear">入学年份</label>
+                                    <input type="text" class="form-control" id="newyear" placeholder="17">
+                                    <small id="newyearHelp" class="form-text text-muted">我是17级的默认也就17级</small>
+                                </div>
+                                <button type="button" @click="newsubmit()" class="btn btn-primary">确认修改</button>
+                            </form>
+                        </div>
+                        <!--批量增加学生-->
+                        <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">
+                            <form>
+                                <div class="form-group">
+                                    <label for="manyName">学生姓名</label>
+                                    <input type="text"  class="form-control" id="manyName" placeholder="学生姓名">
+                                    <small id="manynameHelp" class="form-text text-muted">输入所有同学的名字中间以逗号（中文）隔开,生成学生的数量由你输入名字的个数决定</small>
+                                </div>
+                                <div class="form-group">
+                                    <label for="Password3">Password</label>
+                                    <input type="password" class="form-control" id="Password3" placeholder="123456">
+                                    <small id="password3Help" class="form-text text-muted">初始密码为123456</small>
+                                </div>
+                                <div class="form-group">
+                                    <label for="manyid">起始学号</label>
+                                    <input type="text" class="form-control" id="manyid" placeholder="170405108">
+                                    <small id="manyidHelp" class="form-text text-muted">这是我学号，别整错了</small>
+                                </div>
+                                <div class="form-group">
+                                    <label for="manyprofession">学生专业</label>
+                                    <input type="text" class="form-control" id="manyprofession" placeholder="计算机专业">
+                                    <small id="manyprofessionHelp" class="form-text text-muted">我不管默认就是计算机专业</small>
+                                </div>
+                                <div class="form-group">
+                                    <label for="manyyear">入学年份</label>
+                                    <input type="text" class="form-control" id="manyyear" placeholder="17">
+                                    <small id="manyyearHelp" class="form-text text-muted">我是17级的默认也就17级</small>
+                                </div>
+                                <button type="button" @click="manysubmit()" class="btn btn-primary">批量生成学生</button>
+                            </form>
+                        </div>
+                        <!--查找学生-->
+                        <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">
+                            <form>
+                                <div class="form-group">
+                                    <label for="profession2">学生专业</label>
+                                    <input type="text" class="form-control" id="profession2" placeholder="计算机专业">
+                                    <small id="professionHelp2" class="form-text text-muted">我不管默认就是计算机专业</small>
+                                </div>
+                                <div class="form-group">
+                                    <label for="year2">入学年份</label>
+                                    <input type="text" class="form-control" id="year2" placeholder="17">
+                                    <small id="yearHelp2" class="form-text text-muted">我是17级的默认也就17级</small>
+                                </div>
+                                <button type="button" @click="search()" class="btn btn-primary">查找学生</button>
+                            </form>
+                            <table class="table table-bordered table-striped">
+                                <thead class="thead-light">
+                                <tr class="" style="width: 100%;height: 30px;">
+                                    <td style="width: 20%;">名字</td>
+                                    <td style="width: 20%;">入学年级</td>
+                                    <td style="width: 25%;">专业</td>
+                                    <td style="width: 25%;">学号</td>
+                                    <td style="width: 10%;">
+                                        <button type="button" @click="alert('最好不要这样')" class="btn btn-outline-dark btn-sm">删除全部</button>
+                                    </td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr v-for="student in stuList">
+                                    <td style="width: 18%;">{{ student.stuName }}</td>
+                                    <td style="width: 20%;">{{ student.year_admission }}</td>
+                                    <td style="width: 25%;">{{ student.profession }}</td>
+                                    <td style="width: 22%;">{{ student.id }}</td>
+                                    <td style="width: 15%;">
+                                        <button type="button" @click="deleteStudent(student.id)" class="btn btn-outline-dark btn-sm">删除</button>
+                                        <button type="button" @click="reset(student.id)" class="btn btn-outline-dark btn-sm">重置密码</button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--教师部分-->
+            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                <div class="row">
+                    <div class=" col-2 nav flex-column nav-pills" id="pills-tab" role="tablist" aria-orientation="vertical">
+                        <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">所有教师列表</a>
+                        <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">增加单个教师</a>
+                        <a class="nav-link" id="pills-messages-tab" data-toggle="pill" href="#pills-messages" role="tab" aria-controls="pills-messages" aria-selected="false">修改教师信息</a>
+                    </div>
+                    <div class="col-10 tab-content" id="pills-tabContent">
+                        <!--所有教师列表-->
+                        <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+
+                            <table class="table table-bordered table-striped">
+                                <thead class="thead-light">
+                                <tr class="" style="width: 100%;height: 30px;">
+                                    <td style="width: 25%;">名字</td>
+                                    <td style="width: 30%;">专业</td>
+                                    <td style="width: 35%;">教师号</td>
+                                    <td style="width: 10%;">
+                                        <button type="button" @click="alert('还是不要这么做了吧')" class="btn btn-outline-dark btn-sm">删除全部</button>
+                                    </td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr v-for="teacher in allTeachers">
+                                    <td style="width: 25%;">{{ teacher.teacherName }}</td>
+                                    <td style="width: 30%;">{{ teacher.department }}</td>
+                                    <td style="width: 32%;">{{ teacher.tID }}</td>
+                                    <td style="width: 13%;">
+                                        <button type="button" @click="deleteTeacher(teacher.tID)" class="btn btn-outline-dark btn-sm">删除</button>
+                                        <button type="button" @click="reset(teacher.tID)" class="btn btn-outline-dark btn-sm">重置密码</button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!--增加单个教师-->
+                        <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+                            <form>
+                                <div class="form-group">
+                                    <label for="teacherName">教师姓名</label>
+                                    <input type="text" class="form-control" id="teacherName" placeholder="教师姓名">
+                                    <small id="teaNameHelp" class="form-text text-muted">正确输入就行，千万别空</small>
+                                </div>
+                                <div class="form-group">
+                                    <label for="Password2">Password</label>
+                                    <input type="password" class="form-control" id="Password2" placeholder="123456">
+                                    <small id="password2Help" class="form-text text-muted">初始密码为123456</small>
+                                </div>
+                                <div class="form-group">
+                                    <label for="Tid">职工号</label>
+                                    <input type="text" class="form-control" id="Tid" placeholder="170405108">
+                                    <small id="TidHelp" class="form-text text-muted">这是我学号，别整错了</small>
+                                </div>
+                                <div class="form-group">
+                                    <label for="department">所在院系</label>
+                                    <input type="text" class="form-control" id="department" placeholder="计算机科学与技术专业">
+                                    <small id="departmentHelp" class="form-text text-muted">计算机科学与技术专业(要填全称哦)</small>
+                                </div>
+                                <button type="button" @click="submitTeacher()" class="btn btn-primary">生成教师</button>
+                            </form>
+                        </div>
+                        <!--修改教师信息-->
+                        <div class="tab-pane fade" id="pills-messages" role="tabpanel" aria-labelledby="pills-messages-tab">
+                            <form>
+                                <div class="form-group">
+                                    <label for="oldTid">原职工号</label>
+                                    <input type="text" class="form-control" id="oldTid" placeholder="170405108">
+                                    <small id="oldTidHelp" class="form-text text-muted">这是我学号，别整错了</small>
+                                </div>
+                                <div class="form-group">
+                                    <label for="newteacherName">教师姓名</label>
+                                    <input type="text" class="form-control" id="newteacherName" placeholder="教师姓名">
+                                    <small id="newteaNameHelp" class="form-text text-muted">正确输入就行，千万别空</small>
+                                </div>
+                                <div class="form-group">
+                                    <label for="newTid">新职工号</label>
+                                    <input type="text" class="form-control" id="newTid" placeholder="170405108">
+                                    <small id="newTidHelp" class="form-text text-muted">这是我学号，别整错了</small>
+                                </div>
+                                <div class="form-group">
+                                    <label for="newdepartment">所在院系</label>
+                                    <input type="text" class="form-control" id="newdepartment" placeholder="计算机科学与技术专业">
+                                    <small id="newdepartmentHelp" class="form-text text-muted">计算机科学与技术专业(要填全称哦)</small>
+                                </div>
+                                <button type="button" @click="submitnewTeacher()" class="btn btn-primary">生成教师</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+</div>
+<script>
+    var app = new Vue({
+        el:'#app',
+        data:{
+            allStudents:[],
+            stuList:[],
+            allTeachers:[],
+            teaList:[],
+            name:'admin',
+            authority:'admin'
+        },
+        mounted:function(){
+            this.getStudents();
+            this.getTeachers();
+        },
+        methods:{
+            // 退出登录
+            logout:function(){
+                axios.get('http://47.97.206.40/logout');
+                $(location).attr('href', 'http://47.97.206.40');
+            },
+            getStudents:function () {
+                var that = this;
+                axios.get('http://47.97.206.40/admin/getAllStudents').then(function (response) {
+                    console.log(response);
+                    console.log('成功获取学生数据');
+                    that.allStudents = response.data;
+                });
+            },
+            getTeachers:function () {
+                var that = this;
+                axios.get('http://47.97.206.40/admin/allTeachers').then(function (response) {
+                    console.log(response);
+                    console.log('成功获取教师数据');
+                    that.allTeachers = response.data;
+                });
+            },
+            submit:function () {
+                var name = $('#stuName').val().trim().replace(/\s/g,"");
+                var id = $('#id').val().trim().replace(/\s/g,"");
+                var pwd = $('#Password1').val().trim().replace(/\s/g,"");
+                var year = $('#year').val().trim().replace(/\s/g,"");
+                var profession = $('#profession').val().trim().replace(/\s/g,"");
+                var that = this;
+
+                axios.get('http://47.97.206.40/admin/addStudent',{
+                    params:{
+                        profession:profession,
+                        stuName:name,
+                        stuId:id,
+                        year_admission:year,
+                        password:pwd
+                    }
+                }).then(function (response) {
+                    console.log(response);
+                    alert('又多了一个学生');
+                    that.getStudents();
+                });
+            },
+            newsubmit:function () {
+                var oldid = $('#oldid').val().trim().replace(/\s/g,"");
+                var name = $('#newstuName').val().trim().replace(/\s/g,"");
+                var id = $('#newid').val().trim().replace(/\s/g,"");
+                var year = $('#newyear').val().trim().replace(/\s/g,"");
+                var profession = $('#newprofession').val().trim().replace(/\s/g,"");
+                var that = this;
+
+                axios.get('http://47.97.206.40/admin/updateStudent/'+oldid,{
+                    params:{
+                        profession:profession,
+                        stuName:name,
+                        stuId:id,
+                        year_admission:year
+                    }
+                }).then(function (response) {
+                    console.log(response);
+                    alert('学生信息修改成功');
+                    that.getStudents();
+                });
+            },
+            submitTeacher:function(){
+                var name = $('#teacherName').val().trim().replace(/\s/g,"");
+                var id = $('#Tid').val().trim().replace(/\s/g,"");
+                var pwd = $('#Password2').val().trim().replace(/\s/g,"");
+                var department = $('#department').val().trim().replace(/\s/g,"");
+                console.log(name + id+pwd+department);
+                var that = this;
+
+                axios.get('http://47.97.206.40/admin/addTeacher/',{
+                    params:{
+                        department:department,
+                        name:name,
+                        TID:id,
+                        password:pwd
+                    }
+                }).then(function (response) {
+                    console.log(response);
+                    alert('成功添加一名教师！');
+                    that.getTeachers();
+                });
+            },
+            submitnewTeacher:function(){
+                var name = $('#newteacherName').val().trim().replace(/\s/g,"");
+                var id = $('#newTid').val().trim().replace(/\s/g,"");
+                var oldid = $('#oldTid').val().trim().replace(/\s/g,"");
+                var department = $('#newdepartment').val().trim().replace(/\s/g,"");
+                console.log(name + id+department);
+                var that = this;
+
+                axios.get('http://47.97.206.40/admin/updateTeacher/'+oldid,{
+                    params:{
+                        department:department,
+                        name:name,
+                        TID:id
+                    }
+                }).then(function (response) {
+                    console.log(response);
+                    alert('成功修改教师信息！');
+                    that.getTeachers();
+                });
+            },
+            deleteStudent:function (id) {
+                var that = this;
+                axios.get('http://47.97.206.40/admin/deleteStudent/?stuId=' + id
+                ).then(function (response) {
+                    console.log(response);
+                    alert('删除成功');
+                    that.getStudents();
+                });
+            },
+            deleteTeacher:function (id) {
+                var that = this;
+                axios.get('http://47.97.206.40/admin/deleteTeacher/' + id
+                ).then(function (response) {
+                    console.log(response);
+                    alert('删除成功');
+                    that.getTeachers();
+                });
+            },
+            alert:function (info) {
+                alert(info);
+            },
+            reset:function (id) {
+                var that = this;
+                axios.get('http://47.97.206.40/admin/resetPassword/' + id
+                ).then(function (response) {
+                    console.log(response);
+                    alert('重置成功');
+                    that.getStudents();
+                    that.getTeachers();
+                });
+            },
+            search:function () {
+                var year = $('#year2').val().trim().replace(/\s/g,"");
+                var profession = $('#profession2').val().trim().replace(/\s/g,"");
+                console.log(year +profession);
+                var that = this;
+                axios.get('http://47.97.206.40/admin/getAllStudentsWhere',{
+                    params:{
+                        profession:profession,
+                        year_admission:year
+                    }
+                }).then(function (response) {
+                    console.log(response);
+                    alert('查询完毕!');
+                    that.stuList = response.data;
+                });
+            },
+            manysubmit:function () {
+                var name = $('#manyName').val().trim().replace(/\s/g,"");
+                var id = parseInt($('#manyid').val().trim().replace(/\s/g,""));
+                var pwd = $('#Password3').val().trim().replace(/\s/g,"").toString();
+                var year = $('#manyyear').val().trim().replace(/\s/g,"").toString();
+                var profession = $('#manyprofession').val().trim().replace(/\s/g,"");
+                var that = this;
+                var m = name.split("，");
+                function Stu(name,id,pwd,year,profession) {
+                    this.profession = profession;
+                    this.stuName = name;
+                    this.stuId = id;
+                    this.year_admission =year;
+                    this.password = pwd;
+                }
+                var students = [];
+                for (let i =0;i<m.length;i++){
+                    var stu = new Stu(m[i],(id+i).toString(),pwd,year,profession);
+
+                    students.push(stu);
+                }
+                var data = {
+                    "students": students
+                };
+                console.log(data);
+                axios.post('http://47.97.206.40/admin/addStudents',data).then(function (response) {
+                    console.log(response);
+                    alert('生成完毕!');
+                    that.getStudents();
+                }).catch(function (err) {
+                    console.log(err);
+                });
+
+            }
+        }
+    })
+</script>
+</body>
+</html>

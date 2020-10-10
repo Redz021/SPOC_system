@@ -17,8 +17,6 @@ public class teacherController {
     private final static String addTeacherUrl="/admin/addTeacher";//新增一个老师
     private final static String updateTeacherUrl="/admin/updateTeacher";//更新一个老师
     private final static String deleteTeacherUrl="/admin/deleteTeacher";//删除一个老师
-    @Autowired
-    private courseConnection courseConnection;//课程与教师和学生的联系
 
 
     @Autowired
@@ -34,8 +32,11 @@ public class teacherController {
                              @RequestParam("department")String department,
                              @RequestParam("password")String password)
     {
-        teacherOperation.addTeacher(TID, name, department, password);
-        return "{\"state\":\"success\"}";
+        if(teacherOperation.addTeacher(TID, name, department, password))
+        {
+            return "{\"state\":\"success\"}";
+        }
+        return "{\"state\":null}";
     }
     @RequestMapping(value=updateTeacherUrl+"/{oldTID}",produces = "application/json; charset=utf-8")
     public String updateTeacher(@RequestParam("TID")String TID,
@@ -43,8 +44,11 @@ public class teacherController {
                                 @RequestParam("department")String department,
                                 @PathVariable String oldTID)
     {
-        teacherOperation.updateTeacher(TID, name, department,oldTID);
-        return "{\"state\":\"success\"}";
+        if(teacherOperation.updateTeacher(TID, name, department,oldTID))
+        {
+            return "{\"state\":\"success\"}";
+        }
+        return "{\"state\":null}";
     }
     @RequestMapping(value=deleteTeacherUrl+"/{TID}",produces = "application/json; charset=utf-8")
     public String deleteTeacher(@PathVariable String TID)

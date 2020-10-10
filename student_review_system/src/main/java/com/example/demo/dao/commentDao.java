@@ -19,6 +19,13 @@ public class commentDao {
     {
         commentEntity commentEntity = new commentEntity();
         commentEntity.setCommentList(commentService.getTestQuestionComment(TqNo));
+        for(comment c:commentEntity.getCommentList())
+        {
+            if(c.getStuName()==null)
+            {
+                c.setStuName("授课教师");
+            }
+        }
         commentEntity.setState("success");
         return commentEntity;
     }

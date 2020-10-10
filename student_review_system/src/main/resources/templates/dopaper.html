@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>试卷</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="/static/css/do_paper.css">
+</head>
+
+<body>
+<div id="app">
+    <div class="bg-light">
+        <div class="container bg-light">
+            <nav class="navbar navbar-expand-lg sticky-top navbar-light bg-light">
+                <a class="navbar-brand" href="./index.html">
+                    <img src="/static/img/sut.jpg" style="width: 32px;height: 32px;" alt=""> Spoc
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+                    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                        <li class="nav-item active">
+                            <div class="dropdown">
+                                <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    {{ name }}
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item" @click="logout()" href="javascript:void(0)">退出登录</a>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/course/mainPage">课程</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="http://47.97.206.40/course/my_collections">试题册</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-container="body" data-toggle="popover" title="×暂时不可用" data-placement="bottom" data-content="我们的技术人员正在努力开发，请耐心等待">讨论区</a>
+                        </li>
+                    </ul>
+                    <form class="form-inline my-2 my-lg-0">
+                        <input class="form-control mr-sm-2" type="search" placeholder="Search">
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">搜索</button>
+                    </form>
+                </div>
+            </nav>
+        </div>
+    </div>
+
+    <div class="container" >
+        <div class="mainCont">
+            <h3>{{ paperName }}</h3>
+            <div id="SingleSelection" v-if="SingleSelection.length!=0">
+                <h4>单选题</h4>
+                <div v-for="item in SingleSelection" class="question">
+                    <div class="form-group row">
+                        <h5 class="col">{{item.describe}}</h5>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col">
+                            <div class="radio" v-for="elem in item.options">
+                                <label :for="elem.id" class="list-group-item list-group-item-action">
+                                    <input type="radio" :name="elem.tqNo" :id="elem.id" :value="elem.option">
+                                    {{elem.option}}.{{elem.optionDescription}}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="answer" v-if="mode=='exercise'">
+                        <div class="form-group">
+                            <a class="btn btn-outline-primary" data-toggle="collapse" :href="'#'+'answer'+item.tqNo" role="button" aria-expanded="false" :aria-controls="'answer'+item.tqNo">查看答案</a>
+                            <button v-if="authority=='student'" class="btn btn-outline-primary" @click="collect(item.tqNo)">收藏</button>
+                            <!-- <button class="btn btn-outline-primary" @click="cancelCollect(item.tqNo)">取消收藏</button> -->
+                        </div>
+                        <div class="collapse" :id="'answer'+item.tqNo">
+                            <div class="card card-body">
+                                <div class="form-group row">
+                                    <div class="col">
+                                        参考答案:{{item.answer}}
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col">
+                                        解析:{{item.parsing}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="MultipleSelection" v-if="MultipleSelection.length!=0">
+                <h4>多选题</h4>
+                <div v-for="item in MultipleSelection" class="question">
+                    <div class="form-group row">
+                        <h5 class="col">{{item.describe}}</h5>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col">
+                            <div class="radio" v-for="elem in item.options">
+                                <label :for="elem.id" class="list-group-item list-group-item-action">
+                                    <input type="checkbox" :name="elem.tqNo" :id="elem.id" :value="elem.option">
+                                    {{elem.option}}.{{elem.optionDescription}}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="answer" v-if="mode=='exercise'">
+                        <div class="form-group">
+                            <a class="btn btn-outline-primary" data-toggle="collapse" :href="'#'+'answer'+item.tqNo" role="button" aria-expanded="false" :aria-controls="'answer'+item.tqNo">查看答案</a>
+                            <button v-if="authority=='student'" class="btn btn-outline-primary" @click="collect(item.tqNo)">收藏</button>
+                        </div>
+                        <div class="collapse" :id="'answer'+item.tqNo">
+                            <div class="card card-body">
+                                <div class="form-group row">
+                                    <div class="col">
+                                        参考答案:{{item.answer}}
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col">
+                                        解析:{{item.parsing}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="ShortAnswerQuestion" v-if="ShortAnswerQuestion.length!=0">
+                <h4>简答题</h4>
+                <div v-for="item in ShortAnswerQuestion" class="question">
+                    <div class="form-group row">
+                        <h5 class="col">{{item.describe}}</h5>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col">
+                            <textarea  class="form-control jianda" placeholder="请输入答案" :name="item.tqNo" :id="item.tqNo" rows="5"></textarea>
+                        </div>
+                    </div>
+                    <div class="answer" v-if="mode=='exercise'">
+                        <div class="form-group">
+                            <a class="btn btn-outline-primary" data-toggle="collapse" :href="'#'+'answer'+item.tqNo" role="button" aria-expanded="false" :aria-controls="'answer'+item.tqNo">查看答案</a>
+                            <button v-if="authority=='student'" class="btn btn-outline-primary" @click="collect(item.tqNo)">收藏</button>
+                        </div>
+                        <div class="collapse" :id="'answer'+item.tqNo">
+                            <div class="card card-body">
+                                <div class="form-group row">
+                                    <div class="col">
+                                        参考答案:{{item.answer}}
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col">
+                                        解析:{{item.parsing}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <button v-if="authority=='student'" class="btn btn-success" @click="submit">确认提交</button>
+            <a :href="authority!='admin'?'/course/mainPage':'/admin'" class="btn btn-outline-primary">返回</a>
+        </div>
+    </div>
+</div>
+    <script src="http://libs.baidu.com/jquery/1.9.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="/static/js/do_paper.js"></script>
+</body>
+
+</html>

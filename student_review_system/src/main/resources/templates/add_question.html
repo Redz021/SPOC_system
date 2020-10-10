@@ -10,6 +10,7 @@
 </head>
 
 <body>
+<div id="app">
     <div class="bg-light">
         <div class="container bg-light">
             <nav class="navbar navbar-expand-lg sticky-top navbar-light bg-light">
@@ -23,13 +24,17 @@
                 <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
                     <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
                         <li class="nav-item active">
-                            <a class="nav-link" href="#">课程</a>
+                            <div class="dropdown">
+                                <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    {{ name }}
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item" @click="logout()" href="javascript:void(0)">退出登录</a>
+                                </div>
+                            </div>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">试题册</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#" data-container="body" data-toggle="popover" title="×暂时不可用" data-placement="bottom" data-content="我们的技术人员正在努力开发，请耐心等待">讨论区</a>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/admin">课程</a>
                         </li>
                     </ul>
                     <form class="form-inline my-2 my-lg-0">
@@ -40,7 +45,7 @@
             </nav>
         </div>
     </div>
-    <div class="container" id="app">
+    <div class="container" >
         <div class="row title">
             <label for="category" class="col" style="font-size: 25px;">请选择试题类型</label>
             <div class="col-sm-2 cate">
@@ -62,14 +67,14 @@
                 <div class="col-sm-10">
                     <input id="add_describe_pic" accept="image/jpeg" type="file" class="form-control-file">
                 </div>
+                <hr>
             </div>
-            <hr>
             <div v-if="type!='ShortAnswerQuestion'" class="selections">
                 <div class="form-group row">
                     <label for="options" class="col-sm-2">选项</label>
                     <div class="col-sm-10">
                         <div v-for="item in options" class="selection">
-                            <input type="text" class="form-control selection" v-model="item.optionDescription" :placeholder="item.optionDescribe">
+                            <input type="text" class="form-control selection" v-model="item.optionDescription" placeholder="请输入选项内容">
                         </div>
                         <a @click="addOption">
                             <svg t="1593695697972" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2676" width="25" height="25">
@@ -85,22 +90,22 @@
                             </svg>
                         </a>
                     </div>
+                    <hr>
                 </div>
-                <hr>
                 <div class="form-group row">
                     <label for="SingleSelection_Answer" class="col-sm-2">答案</label>
                     <div class="col-sm-10">
-                        <ul id="SingleSelection_Answer" style="list-style-type: none;">
-                            <li v-for="item in options">
-                                <label for=""><input :type="type=='SingleSelection'?'radio':'checkbox'" name="selection" :value="item.option">
-                                    {{item.option}}.&nbsp;&nbsp;&nbsp;&nbsp;{{item.optionDescription}}
+                        <div id="SingleSelection_Answer" class="card">
+                            <label class="list-group-item list-group-item-action" style="margin:0;" :for="item.option" v-for="item in options">
+                                <label :for="item.option"><input :id="item.option" :type="type=='SingleSelection'?'radio':'checkbox'" name="selection" :value="item.option">
+                                    <label :for="item.option">{{item.option}}.&nbsp;&nbsp;&nbsp;&nbsp;{{item.optionDescription}}</label>
                                 </label>
-                            </li>
-                        </ul>
+                            </label>
+                        </div>
                     </div>
                 </div>
+                <hr>
             </div>
-            <hr>
 
             <div class="form-group row" v-if="type=='ShortAnswerQuestion'">
                 <label for="ShortAnswer_Answer" class="col-sm-2">参考答案</label>
@@ -125,12 +130,13 @@
             <div class="form-group row">
                 <div class="col-sm-10 offset-sm-2">
                     <button class="btn btn-primary" @click="collectAndSend">确认提交</button>
+                    <a :href="authority!='admin'?'/course/mainPage':'/admin'" class="btn btn-outline-primary">返回</a>
                 </div>
             </div>
         </div>
     </div>
 
-
+</div>
 
 
     <script src="http://libs.baidu.com/jquery/1.9.0/jquery.min.js"></script>

@@ -22,7 +22,8 @@ import java.util.List;
 @CrossOrigin
 @RestController
 public class courseController {
-    private final static String courseConnect="/course";
+    private final static String courseConnect="/course";//获取学生或教师所有可见课程
+    private final static String getOneCourseUrl = "/admin/course/getOneCourse";//获取单个课程的详细信息
     private final static String AllCoursesUrl = "/admin/course/getAllCourses";//获取所有的课程
     private final static String addCourseUrl = "/admin/course/addCourse";//增加课程
     private final static String addCourseTeacher="/admin/course/addCourseTeacher";//增加课程与教师的关系
@@ -32,6 +33,12 @@ public class courseController {
     private final static String deleteCourseTeacherUrl="/admin/course/deleteCourseTeacher";//删除教师与课程的对应关系
     @Autowired
     private com.example.demo.dao.courseConnection courseConnection;
+    @RequestMapping(value=getOneCourseUrl+"/{Cno}",produces = "application/json; charset=utf-8")
+    public String getGetOneCourse(@PathVariable String Cno)
+    {
+        return JSON.toJSONString(courseOperation.getCourse(Cno));
+    }
+
     @RequestMapping(value=courseConnect,produces = "application/json; charset=utf-8")
     public String GetStudentPage(HttpServletRequest request)
     {
@@ -52,8 +59,11 @@ public class courseController {
                             @RequestParam String year_admission,
                             @RequestParam String ifopen)
     {
-        courseOperation.addCourse(name, profession, year_admission, ifopen);
-        return "{\"state\":\"success\"}";
+        String Cno = courseOperation.addCourse(name, profession, year_admission, ifopen).getCno();
+        String result ="{\"Cno\":\"";
+        result+=Cno;
+        result+="\",\"state\":\"success\"}";
+        return result;
     }
     @RequestMapping(value=addCourseTeacher,produces = "application/json; charset=utf-8")
     public String addCourseTeacher(@RequestParam String Cno,@RequestParam String TID)

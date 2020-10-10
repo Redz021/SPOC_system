@@ -2,6 +2,7 @@ package com.example.demo.model.service;
 
 import com.example.demo.model.ValueObject.UserLogin;
 import com.example.demo.model.mapper.UserMapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.demo.model.ValueObject.*;
@@ -44,5 +45,10 @@ public class userService {
     public void deleteUser(String id)
     {
         userMapper.deleteUser(id);
+    }
+    //更改密码
+    public void ChangePassword(String userId,String password)
+    {
+        userMapper.ChangePassword(userId, password);
     }
 }

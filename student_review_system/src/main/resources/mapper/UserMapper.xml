@@ -49,7 +49,7 @@
     </update>
     <!--批量增加用户-->
     <insert id="addUsers" parameterType="com.example.demo.model.ValueObject.UserLogin">
-        INSERT INTO `user_log` (`id`, `password`, `authority`, `enable`) VALUES
+        replace INTO `user_log` (`id`, `password`, `authority`, `enable`) VALUES
         <foreach item="item" collection="list" separator=","  index="index">
             (#{item.id},#{item.password},#{item.authority},'1')
         </foreach>
@@ -58,4 +58,12 @@
     <delete id="deleteUser">
         delete from `user_log`where id=#{id}
     </delete>
+    <!--更改密码-->
+    <update id="ChangePassword">
+        update `user_log`
+        <set>
+            `password` = #{password}
+        </set>
+        where id = #{userId}
+    </update>
 </mapper>

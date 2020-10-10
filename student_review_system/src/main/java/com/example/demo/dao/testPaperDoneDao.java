@@ -10,9 +10,7 @@ import com.example.demo.tools.getCurrentTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class testPaperDoneDao {
@@ -22,7 +20,7 @@ public class testPaperDoneDao {
     @Autowired
     private testPaperDoneService testPaperDoneService;
 
-    public testPaper doTestPaper(String TpNo, String stuId, Map<String,String> answer)
+    public testPaper doTestPaper(String TpNo, String stuId, List<LinkedHashMap<String,String>> answer)
     {
         //根据TpNo获取试卷
         testPaper right = new testPaper();
@@ -32,12 +30,19 @@ public class testPaperDoneDao {
         testPaperDone.setStuID(stuId);
         testPaperDone.setDoDate(getCurrentTime.getTime());
         testPaperDone.setTpNo(TpNo);
+
+       Map<String,String> map = new HashMap<>();//将List<Map<String,String>>转换成map<String,String>
+        for(Map<String,String> m:answer)
+        {
+            map.put(m.get("TqNo"),m.get("answer"));
+        }
+
         for(testQuestion t:right.getTestQuestions()) {
             TestPaperDoneDetails tmp = new TestPaperDoneDetails();
-            tmp.setAnswer(answer.get(t.getTqNo()));
+            tmp.setAnswer(map.get(t.getTqNo()));
             tmp.setTqNo(t.getTqNo() + "");
-            t.setInputAnswer(answer.get(t.getTqNo()));
-            if (answer.get(t.getTqNo()).equals(t.getAnswer())) {
+            t.setInputAnswer(map.get(t.getTqNo()));
+            if (map.get(t.getTqNo()+"").equals(t.getAnswer())) {
 
                 tmp.setIfwrong("0");
                 t.setIfWrong("0");
